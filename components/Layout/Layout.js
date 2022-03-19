@@ -11,7 +11,9 @@ export default function Layout(props) {
       </Head>
       <div className="flex h-screen flex-col overflow-x-hidden bg-dark font-merri text-light">
         <Header name={props.name} />
-        <div>{props.children}</div>
+        <div className="min-h-[calc(100vh-200px)] px-24 py-12">
+          {props.children}
+        </div>
         <Footer />
       </div>
     </div>

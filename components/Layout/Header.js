@@ -58,7 +58,7 @@ export default function Header(props) {
             </>
           ) : (
             <>
-              <Link href="/signin" passHref>
+              <Link href="/login" passHref>
                 <li className="hover:cursor-pointer hover:text-accent">
                   Log In / Sign Up
                 </li>
