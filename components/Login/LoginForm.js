@@ -75,7 +75,7 @@ export default function LoginForm() {
           Login / Signup
         </button>
       </form>
-      <GoogleSignInButton redirect="/profile" />
+      <GoogleSignInButton />
       <div className="pt-12 text-red-500">{loginError}</div>
     </div>
   )

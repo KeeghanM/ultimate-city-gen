@@ -14,7 +14,7 @@ export default function GoogleSignInButton(props) {
       .then((result) => {
         const userRef = doc(firestore, "users", result.user.uid)
         setDoc(userRef, {}, { merge: true })
-        router.push(props.redirect)
+        router.push("/profile")
       })
       .catch((error) => handleError(error))
   }
