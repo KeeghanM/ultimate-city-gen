@@ -13,7 +13,11 @@ export default function GoogleSignInButton(props) {
     signInWithPopup(auth, provider)
       .then((result) => {
         const userRef = doc(firestore, "users", result.user.uid)
-        setDoc(userRef, {}, { merge: true })
+        setDoc(
+          userRef,
+          { email: result.user.email, displayName: result.user.displayName },
+          { merge: true }
+        )
         router.push("/profile")
       })
       .catch((error) => handleError(error))

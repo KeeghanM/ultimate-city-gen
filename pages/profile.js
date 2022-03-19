@@ -7,7 +7,7 @@ export default function Profile() {
 
   return (
     <Layout name="Profile">
-      {user && <p>Welcome to your profile {user.email}</p>}
+      {user && <p>Welcome to your profile {user.displayName || user.email}</p>}
     </Layout>
   )
 }
