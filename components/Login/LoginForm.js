@@ -5,7 +5,7 @@ import {
 import { doc, setDoc } from "firebase/firestore"
 import { useState } from "react"
 import { auth, firestore } from "../../lib/firebase"
-import GoogleSignInButton from "./GoogleSigninButton"
+import GoogleSignInButton from "./googleSigninButton"
 import { useRouter } from "next/router"
 
 export default function LoginForm() {

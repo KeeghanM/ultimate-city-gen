@@ -1,6 +1,6 @@
 import Head from "next/head"
-import Header from "./Header.js"
-import Footer from "./Footer.js"
+import Header from "./header.js"
+import PageFooter from "./footer.js"
 
 export default function Layout(props) {
   return (
@@ -14,7 +14,7 @@ export default function Layout(props) {
         <div className="min-h-[calc(100vh-200px)] px-24 py-12">
           {props.children}
         </div>
-        <Footer />
+        <PageFooter />
       </div>
     </div>
   )

@@ -1,9 +1,9 @@
 import { useContext, useState } from "react"
 import { UserContext } from "../lib/context"
-import Layout from "../components/Layout/Layout"
-import LoginForm from "../components/Login/LoginForm"
-import TownList from "../components/Towns/TownList"
-import AddTownButton from "../components/Towns/AddTownButton"
+import Layout from "../components/layout/layout"
+import LoginForm from "../components/login/loginForm"
+import TownList from "../components/towns/TownList"
+import AddTownButton from "../components/towns/addTownButton"
 
 export default function Towns() {
   const { user } = useContext(UserContext)
