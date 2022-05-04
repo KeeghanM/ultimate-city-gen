@@ -13,6 +13,7 @@ import {
   EyebrowDescriptors,
   NoseDescriptors,
   FacialHairDescriptors,
+  BodyDescriptors,
 } from "../../lib/nameGenerators/typeLists"
 import { toFeet, weightedRandom } from "../../lib/utils"
 
@@ -75,35 +76,31 @@ export default class Person {
 
     // Set description values
     let height = Math.random() > 0.5
-    let skinColour =
-      Math.random() > 0.4
-        ? SkinColours[Math.floor(Math.random() * SkinColours.length)]
-        : undefined
-    let hairColour =
-      Math.random() > 0.2
-        ? HairColours[Math.floor(Math.random() * HairColours.length)]
-        : undefined
-    let hairDescription =
+    let skinColour = SkinColours[Math.floor(Math.random() * SkinColours.length)]
+    let hairColour = HairColours[Math.floor(Math.random() * HairColours.length)]
+    let eyeColour = EyeColours[Math.floor(Math.random() * EyeColours.length)]
+
+    let faceDescription =
       Math.random() > 0.5
-        ? HairDescriptors[Math.floor(Math.random() * HairDescriptors.length)]
-        : undefined
-    let eyeColour =
-      Math.random() > 0.2
-        ? EyeColours[Math.floor(Math.random() * EyeColours.length)]
-        : undefined
-    let mouthDescription =
-      Math.random() > 0.9
-        ? MouthDescriptors[Math.floor(Math.random() * MouthDescriptors.length)]
+        ? FaceDescriptors[Math.floor(Math.random() * FaceDescriptors.length)]
         : undefined
     let eyeDescription =
       Math.random() > 0.5
         ? EyeDescriptors[Math.floor(Math.random() * EyeDescriptors.length)]
+        : undefined
+    let hairDescription =
+      Math.random() > 0.5
+        ? HairDescriptors[Math.floor(Math.random() * HairDescriptors.length)]
         : undefined
     let eyeBrowDescription =
       Math.random() > 0.9
         ? EyebrowDescriptors[
             Math.floor(Math.random() * EyebrowDescriptors.length)
           ]
+        : undefined
+    let mouthDescription =
+      Math.random() > 0.9
+        ? MouthDescriptors[Math.floor(Math.random() * MouthDescriptors.length)]
         : undefined
     let noseDescription =
       Math.random() > 0.9
@@ -116,6 +113,10 @@ export default class Person {
         ? FacialHairDescriptors[
             Math.floor(Math.random() * FacialHairDescriptors.length)
           ]
+        : undefined
+    let bodyDescription =
+      Math.random() > 0.9
+        ? BodyDescriptors[Math.floor(Math.random() * BodyDescriptors.length)]
         : undefined
 
     // BUILD THE DESCRIPTION TEXT
@@ -137,41 +138,47 @@ export default class Person {
       description += this.height + " tall. "
     }
 
-    if (skinColour) {
-      description += pronoun +=
-        (plural ? " has " : " have ") + skinColour + " skin"
+    description +=
+      pronoun + (plural ? " has " : " have ") + skinColour + " skin and "
+
+    if (hairDescription) {
+      description += hairDescription + " "
     }
-
-    if (hairColour) {
-      if (skinColour) {
-        description += " and "
-      } else {
-        description += pronoun + (plural ? " has " : " have ")
-      }
-
-      if (hairDescription) {
-        description += hairDescription + " "
-      }
-      description += hairColour + " hair. "
-    } else {
-      description += ". "
-    }
-
-    description += possesive + " "
+    description += hairColour + " hair, with "
 
     if (eyeDescription) description += eyeDescription + " "
-    if (eyeColour) description += eyeColour + " "
-    if (eyeDescription || eyeColour) {
-      description += "eyes"
-      if (eyeBrowDescription) {
-        let r = Math.random()
-        let segway =
-          r > 0.6
-            ? " are framed by"
-            : r > 0.3
-            ? " sit below "
-            : " are paired with "
-        description += segway + eyeBrowDescription + " brows."
+    description += eyeColour + " "
+    description += "eyes"
+    if (eyeBrowDescription) {
+      let r = Math.random()
+      let segway =
+        r > 0.6
+          ? " which are framed by "
+          : r > 0.3
+          ? " which sit below "
+          : " which are paired with "
+      description += segway + eyeBrowDescription + " brows, "
+    }
+
+    if (faceDescription) {
+      let r = Math.random()
+      let segway =
+        r > 0.5
+          ? (eyeBrowDescription ? " and " : " ") + " which sit in a"
+          : " which feature on a"
+
+      description += segway + " " + faceDescription + "."
+
+      if (noseDescription || mouthDescription || facialHairDescription) {
+        description += " " + pronoun + (plural ? " has a " : " have a ")
+
+        if (noseDescription) description += noseDescription
+        if (mouthDescription)
+          description += (noseDescription ? " and " : "") + mouthDescription
+        if (facialHairDescription)
+          description +=
+            (noseDescription || mouthDescription ? " and " : "") +
+            facialHairDescription
       }
     }
 
