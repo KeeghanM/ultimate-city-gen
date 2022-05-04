@@ -2,11 +2,17 @@ import GenerateHumanName from "../../lib/nameGenerators/humanNames"
 import GenerateDwarfName from "../../lib/nameGenerators/dwarfNames"
 import GenerateElfName from "../../lib/nameGenerators/elfNames"
 import {
-  VoiceTypes,
   JobTypes,
   HairColours,
   EyeColours,
-  KeyFeatures,
+  SkinColours,
+  HairDescriptors,
+  FaceDescriptors,
+  MouthDescriptors,
+  EyeDescriptors,
+  EyebrowDescriptors,
+  NoseDescriptors,
+  FacialHairDescriptors,
 } from "../../lib/nameGenerators/typeLists"
 import { toFeet, weightedRandom } from "../../lib/utils"
 
@@ -18,11 +24,9 @@ export default class Person {
     this.race = props.race || generateRace(this.parents)
     this.name = props.name || generateName(this.gender, this.race)
     this.job = props.job || generateJob(this.age, this.parents)
-    this.voice = props.voice || generateVoice(this.age, this.gender)
-    this.hairColour = undefined
-    this.height = undefined
-    this.eyeColour = undefined
-    this.keyFeature = undefined
+    this.height = props.height || generateHeight(this.age, this.race)
+    this.hairColour = props.hairColour || generateHairColour(this.parents)
+    this.eyeColour = props.eyeColour || generateEyeColour(this.parents)
     this.description = props.description || this.generateDescription()
   }
 
@@ -38,55 +42,137 @@ export default class Person {
     return this.job
   }
 
+  getRace() {
+    return this.race
+  }
+  getHeight() {
+    return this.height
+  }
+  getAge() {
+    return this.age
+  }
+  getGender() {
+    return this.gender
+  }
+
   generateDescription() {
-    if (this.parents.length > 0) {
+    let description = ""
+
+    // Setup useful terms
+    let plural = !(this.gender == "Non-Binary")
+    let pronoun =
+      this.gender == "Male"
+        ? "He"
+        : this.gender == "Non-Binary"
+        ? "They"
+        : "She"
+    let possesive =
+      this.gender == "Male"
+        ? "His"
+        : this.gender == "Non-Binary"
+        ? "Their"
+        : "Her"
+
+    // Set description values
+    let height = Math.random() > 0.5
+    let skinColour =
+      Math.random() > 0.4
+        ? SkinColours[Math.floor(Math.random() * SkinColours.length)]
+        : undefined
+    let hairColour =
+      Math.random() > 0.2
+        ? HairColours[Math.floor(Math.random() * HairColours.length)]
+        : undefined
+    let hairDescription =
+      Math.random() > 0.5
+        ? HairDescriptors[Math.floor(Math.random() * HairDescriptors.length)]
+        : undefined
+    let eyeColour =
+      Math.random() > 0.2
+        ? EyeColours[Math.floor(Math.random() * EyeColours.length)]
+        : undefined
+    let mouthDescription =
+      Math.random() > 0.9
+        ? MouthDescriptors[Math.floor(Math.random() * MouthDescriptors.length)]
+        : undefined
+    let eyeDescription =
+      Math.random() > 0.5
+        ? EyeDescriptors[Math.floor(Math.random() * EyeDescriptors.length)]
+        : undefined
+    let eyeBrowDescription =
+      Math.random() > 0.9
+        ? EyebrowDescriptors[
+            Math.floor(Math.random() * EyebrowDescriptors.length)
+          ]
+        : undefined
+    let noseDescription =
+      Math.random() > 0.9
+        ? NoseDescriptors[Math.floor(Math.random() * NoseDescriptors.length)]
+        : undefined
+    let facialHairDescription =
+      this.gender == "Female"
+        ? undefined
+        : Math.random() > 0.9
+        ? FacialHairDescriptors[
+            Math.floor(Math.random() * FacialHairDescriptors.length)
+          ]
+        : undefined
+
+    // BUILD THE DESCRIPTION TEXT
+    if (height) {
       let r = Math.random()
-      this.hairColour =
-        r > 0.5 || this.parents.length == 1
-          ? this.parents[0].hairColour
-          : this.parents[1].hairColour
-      this.eyeColour =
-        r > 0.5 || this.parents.length == 1
-          ? this.parents[0].eyeColour
-          : this.parents[1].eyeColour
+      description += pronoun + " "
+      description +=
+        r > 0.6
+          ? plural
+            ? " stands about "
+            : " stand about "
+          : r > 0.3
+          ? plural
+            ? " looks about "
+            : " look about "
+          : plural
+          ? " is around "
+          : " are around "
+      description += this.height + " tall. "
+    }
+
+    if (skinColour) {
+      description += pronoun +=
+        (plural ? " has " : " have ") + skinColour + " skin"
+    }
+
+    if (hairColour) {
+      if (skinColour) {
+        description += " and "
+      } else {
+        description += pronoun + (plural ? " has " : " have ")
+      }
+
+      if (hairDescription) {
+        description += hairDescription + " "
+      }
+      description += hairColour + " hair. "
     } else {
-      this.hairColour =
-        HairColours[Math.floor(Math.random() * HairColours.length)]
-      this.eyeColour = EyeColours[Math.floor(Math.random() * EyeColours.length)]
-    }
-    this.height =
-      this.race == "Dwarf"
-        ? toFeet(Math.round(Math.random() * 45) + 110)
-        : this.race == "Elf"
-        ? toFeet(Math.round(Math.random() * 45) + 160)
-        : toFeet(Math.round(Math.random() * 45) + 150)
-    if (this.age < 15) {
-      this.height = this.height / 2
+      description += ". "
     }
 
-    let r = Math.random()
-    if (r > 0.5) {
-      this.keyFeature =
-        KeyFeatures[Math.floor(Math.random() * KeyFeatures.length)]
-    }
-    let description =
-      this.name +
-      " is a " +
-      this.age +
-      " year old " +
-      this.gender +
-      " " +
-      this.race +
-      " who stands " +
-      this.height +
-      " tall. They have " +
-      this.hairColour +
-      " hair and " +
-      this.eyeColour +
-      " eyes."
+    description += possesive + " "
 
-    if (this.keyFeature) {
-      description += " They also have a " + this.keyFeature + "."
+    if (eyeDescription) description += eyeDescription + " "
+    if (eyeColour) description += eyeColour + " "
+    if (eyeDescription || eyeColour) {
+      description += "eyes"
+      if (eyeBrowDescription) {
+        let r = Math.random()
+        let segway =
+          r > 0.6
+            ? " are framed by"
+            : r > 0.3
+            ? " sit below "
+            : " are paired with "
+        description += segway + eyeBrowDescription + " brows."
+      }
     }
 
     return description
@@ -136,6 +222,7 @@ function generateAge(parents) {
     ? Math.round(Math.random() * 20) + 50
     : Math.round(Math.random() * 30) + 20
 }
+
 function generateJob(age, parents) {
   if (age < 14) return undefined
 
@@ -146,6 +233,35 @@ function generateJob(age, parents) {
   }
   return JobTypes[Math.floor(Math.random() * JobTypes.length)]
 }
-function generateVoice(age, gender) {
-  return VoiceTypes[Math.floor(Math.random() * VoiceTypes.length)]
+
+function generateEyeColour(parents) {
+  if (parents.length > 0) {
+    let r = Math.random()
+    return r > 0.5 || parents.length == 1
+      ? parents[0].eyeColour
+      : parents[1].eyeColour
+  }
+  return EyeColours[Math.floor(Math.random() * EyeColours.length)]
+}
+function generateHairColour(parents) {
+  if (parents.length > 0) {
+    let r = Math.random()
+    return r > 0.5 || parents.length == 1
+      ? parents[0].hairColour
+      : parents[1].hairColour
+  }
+  return HairColours[Math.floor(Math.random() * HairColours.length)]
+}
+
+function generateHeight(age, race) {
+  let height =
+    race == "Dwarf"
+      ? toFeet(Math.round(Math.random() * 45) + 110)
+      : race == "Elf"
+      ? toFeet(Math.round(Math.random() * 45) + 160)
+      : toFeet(Math.round(Math.random() * 45) + 150)
+  if (age < 15) {
+    height = height / 2
+  }
+  return height
 }
