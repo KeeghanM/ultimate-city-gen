@@ -1,6 +1,6 @@
-import GenerateHumanName from "../../lib/nameGenerators/humanNames"
-import GenerateDwarfName from "../../lib/nameGenerators/dwarfNames"
-import GenerateElfName from "../../lib/nameGenerators/elfNames"
+import GenerateHumanName from "./generators/humanNames"
+import GenerateDwarfName from "./generators/dwarfNames"
+import GenerateElfName from "./generators/elfNames"
 import {
   JobTypes,
   HairColours,
@@ -14,7 +14,7 @@ import {
   NoseDescriptors,
   FacialHairDescriptors,
   BodyDescriptors,
-} from "../../lib/nameGenerators/typeLists"
+} from "./generators/typeLists"
 import { toFeet, weightedRandom } from "../../lib/utils"
 
 export default class Person {

@@ -1,3 +1,3 @@
 export default class Household {
-  constructor() {}
+  constructor(props) {}
 }
