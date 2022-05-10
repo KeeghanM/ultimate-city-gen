@@ -1,8 +1,9 @@
 // IMPORTS AND CONSTS
+const { ipcRenderer } = require("electron")
 const { p5 } = require("p5")
 const { town } = require("./Towns/Town")
 const { voronoi } = require("@zbryikt/voronoijs")
-const { closeSync } = require("original-fs")
+// const { tippy } = require("tippy.js")
 const COLORS = {
   dark: "#333",
   light: "#999",
@@ -24,7 +25,7 @@ let mousePressedY = null
 const mouseDragDetectionThreshold = 10
 
 // UI ELEMENTS
-let btn_addWall, btn_hand
+let btn_addWall, btn_hand, btn_addDistrict, btn_addBuilding
 let btnList = []
 
 // GROUPS
@@ -37,25 +38,12 @@ function setup() {
   createCanvas(windowWidth, windowHeight)
 
   // Create UI Bar
-  btn_hand = createButton("✋").mousePressed(handMode)
-  btn_hand.position(0, 0)
-  btn_hand.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
-  btn_hand.addClass("active")
-
-  btn_addWall = createButton("🧱").mousePressed(addWallMode)
-  btn_addWall.position(50, 0)
-  btn_addWall.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
-
-  btnList.push(btn_hand)
-  btnList.push(btn_addWall)
+  createFunctionButtons()
 }
 
 function draw() {
   noStroke()
   background(COLORS.dark)
-  // UI ELEMENTS
-  fill(0)
-  rect(0, 0, windowWidth, UI_BAR_HEIGHT)
 
   push()
   translate(transformX, transformY)
@@ -70,6 +58,10 @@ function draw() {
     line(site.x, site.y, wallSites[nextI].x, wallSites[nextI].y)
   }
   pop()
+
+  // UI ELEMENTS
+  fill(0)
+  rect(0, 0, windowWidth, UI_BAR_HEIGHT)
 }
 
 function registeredClick(mouseBtn) {
@@ -102,6 +94,7 @@ function registeredClick(mouseBtn) {
   }
 }
 
+// MODE SETTING
 function handMode() {
   for (let btn of btnList) btn.removeClass("active")
   mode = "hand"
@@ -112,6 +105,18 @@ function addWallMode() {
   for (let btn of btnList) btn.removeClass("active")
   mode = "wall"
   btn_addWall.addClass("active")
+}
+
+function addDistrictMode() {
+  for (let btn of btnList) btn.removeClass("active")
+  mode = "district"
+  btn_addDistrict.addClass("active")
+}
+
+function addBuildingMode() {
+  for (let btn of btnList) btn.removeClass("active")
+  mode = "building"
+  btn_addBuilding.addClass("active")
 }
 
 // HELPERS
@@ -193,4 +198,57 @@ function mouseWheel(event) {
 
   // Disable page scroll
   return false
+}
+
+function createFunctionButtons() {
+  btn_hand = createButton("✋").mousePressed(handMode)
+  btn_hand.position(0, 0)
+  btn_hand.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
+  btn_hand.addClass("active")
+  btn_hand.id("btn-hand")
+
+  btn_addWall = createButton("🧱").mousePressed(addWallMode)
+  btn_addWall.position(50, 0)
+  btn_addWall.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
+  btn_addWall.id("btn-wall")
+
+  btn_addDistrict = createButton("🚧").mousePressed(addDistrictMode)
+  btn_addDistrict.position(100, 0)
+  btn_addDistrict.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
+  btn_addDistrict.id("btn-district")
+
+  btn_addBuilding = createButton("🏛️").mousePressed(addBuildingMode)
+  btn_addBuilding.position(150, 0)
+  btn_addBuilding.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
+  btn_addBuilding.id("btn-building")
+
+  btnList.push(btn_hand)
+  btnList.push(btn_addWall)
+  btnList.push(btn_addDistrict)
+  btnList.push(btn_addBuilding)
+
+  tippy("#btn-hand", {
+    content: "Hand Mode",
+    arrow: true,
+    placement: "bottom",
+    theme: "light",
+  })
+  tippy("#btn-wall", {
+    content: "Add Walls (left click to add, right click to remove)",
+    arrow: true,
+    placement: "bottom",
+    theme: "light",
+  })
+  tippy("#btn-district", {
+    content: "Add Districts (left click to add, right click to remove)",
+    arrow: true,
+    placement: "bottom",
+    theme: "light",
+  })
+  tippy("#btn-building", {
+    content: "Add Buildings (left click to add, right click to remove)",
+    arrow: true,
+    placement: "bottom",
+    theme: "light",
+  })
 }

@@ -8,6 +8,7 @@ button {
     background: none;
     border:none;
     font-size: 2rem;
+    text-align: center;
 }
 button:hover {
     background: #5B8E7D;

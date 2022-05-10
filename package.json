@@ -45,9 +45,10 @@
     }
   },
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.0",
     "@zbryikt/voronoijs": "github:zbryikt/voronoijs",
-    "p5": "^1.4.1"
+    "electron-squirrel-startup": "^1.0.0",
+    "p5": "^1.4.1",
+    "tippy.js": "^6.3.7"
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.63",
