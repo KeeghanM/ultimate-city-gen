@@ -1,5 +1,6 @@
 import { useState } from "react"
 import Person from "../components/towns/person"
+import p5Min from "p5"
 
 export default function TestPage() {
   const [people, setpeople] = useState([])
@@ -14,7 +15,7 @@ export default function TestPage() {
   }
   return (
     <div className="p-20">
-      <button
+      {/* <button
         onClick={genNew}
         className="mb-2 bg-accent px-4 py-2 text-light hover:bg-dark"
       >
@@ -37,7 +38,17 @@ export default function TestPage() {
             </p>
           )
         })}
-      </div>
+      </div> */}
+      <div id="canvas"></div>
     </div>
   )
+}
+
+function setuo() {
+  var myCanvas = createCanvas(800, 400)
+  myCanvas.parent("canvas")
+}
+
+function draw() {
+  background(220)
 }
