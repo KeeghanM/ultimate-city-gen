@@ -10,6 +10,9 @@ button {
     font-size: 2rem;
     text-align: center;
 }
+button:disabled {
+    display: none;
+}
 button:hover {
     background: #5B8E7D;
 }

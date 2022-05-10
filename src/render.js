@@ -3,7 +3,6 @@ const { ipcRenderer } = require("electron")
 const { p5 } = require("p5")
 const { town } = require("./Towns/Town")
 const { voronoi } = require("@zbryikt/voronoijs")
-// const { tippy } = require("tippy.js")
 const COLORS = {
   dark: "#333",
   light: "#999",
@@ -25,11 +24,13 @@ let mousePressedY = null
 const mouseDragDetectionThreshold = 10
 
 // UI ELEMENTS
-let btn_addWall, btn_hand, btn_addDistrict, btn_addBuilding
+let btn_addWall, btn_hand, btn_addDistrict, btn_addBlock, btn_addBuilding
 let btnList = []
 
 // GROUPS
 let wallSites = []
+let districts = []
+let blocks = []
 
 // General Variables
 let mode = "hand"
@@ -42,6 +43,7 @@ function setup() {
 }
 
 function draw() {
+  updateFunctionButtons()
   noStroke()
   background(COLORS.dark)
 
@@ -95,28 +97,12 @@ function registeredClick(mouseBtn) {
 }
 
 // MODE SETTING
-function handMode() {
-  for (let btn of btnList) btn.removeClass("active")
-  mode = "hand"
-  btn_hand.addClass("active")
-}
-
-function addWallMode() {
-  for (let btn of btnList) btn.removeClass("active")
-  mode = "wall"
-  btn_addWall.addClass("active")
-}
-
-function addDistrictMode() {
-  for (let btn of btnList) btn.removeClass("active")
-  mode = "district"
-  btn_addDistrict.addClass("active")
-}
-
-function addBuildingMode() {
-  for (let btn of btnList) btn.removeClass("active")
-  mode = "building"
-  btn_addBuilding.addClass("active")
+function setMode(md) {
+  mode = md
+  for (let btn of btnList) {
+    btn.removeClass("active")
+    if (btn.id() === "btn-" + md) btn.addClass("active")
+  }
 }
 
 // HELPERS
@@ -200,31 +186,58 @@ function mouseWheel(event) {
   return false
 }
 
+// UI ELEMENTS
+function updateFunctionButtons() {
+  if (wallSites.length < 3) {
+    btn_addDistrict.attribute("disabled", "")
+  } else {
+    btn_addDistrict.removeAttribute("disabled")
+  }
+
+  if (districts.length < 1) {
+    btn_addBlock.attribute("disabled", "")
+  } else {
+    btn_addBlock.removeAttribute("disabled")
+  }
+
+  if (blocks.length < 1) {
+    btn_addBuilding.attribute("disabled", "")
+  } else {
+    btn_addBuilding.removeAttribute("disabled")
+  }
+}
+
 function createFunctionButtons() {
-  btn_hand = createButton("✋").mousePressed(handMode)
+  btn_hand = createButton("✋").mousePressed(() => setMode("hand"))
   btn_hand.position(0, 0)
   btn_hand.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
   btn_hand.addClass("active")
   btn_hand.id("btn-hand")
 
-  btn_addWall = createButton("🧱").mousePressed(addWallMode)
+  btn_addWall = createButton("🧱").mousePressed(() => setMode("wall"))
   btn_addWall.position(50, 0)
   btn_addWall.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
   btn_addWall.id("btn-wall")
 
-  btn_addDistrict = createButton("🚧").mousePressed(addDistrictMode)
+  btn_addDistrict = createButton("🚧").mousePressed(() => setMode("district"))
   btn_addDistrict.position(100, 0)
   btn_addDistrict.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
   btn_addDistrict.id("btn-district")
 
-  btn_addBuilding = createButton("🏛️").mousePressed(addBuildingMode)
-  btn_addBuilding.position(150, 0)
+  btn_addBlock = createButton("🔳").mousePressed(() => setMode("block"))
+  btn_addBlock.position(150, 0)
+  btn_addBlock.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
+  btn_addBlock.id("btn-block")
+
+  btn_addBuilding = createButton("🏛️").mousePressed(() => setMode("building"))
+  btn_addBuilding.position(200, 0)
   btn_addBuilding.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
   btn_addBuilding.id("btn-building")
 
   btnList.push(btn_hand)
   btnList.push(btn_addWall)
   btnList.push(btn_addDistrict)
+  btnList.push(btn_addBlock)
   btnList.push(btn_addBuilding)
 
   tippy("#btn-hand", {
@@ -241,6 +254,12 @@ function createFunctionButtons() {
   })
   tippy("#btn-district", {
     content: "Add Districts (left click to add, right click to remove)",
+    arrow: true,
+    placement: "bottom",
+    theme: "light",
+  })
+  tippy("#btn-block", {
+    content: "Add Blocks (left click to add, right click to remove)",
     arrow: true,
     placement: "bottom",
     theme: "light",
