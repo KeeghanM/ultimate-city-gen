@@ -1,6 +1,6 @@
-import Bulding from "./building"
+const Bulding = require("./building")
 
-export default class District {
+class District {
   constructor(props) {
     this.name = props.name || generateName()
     this.blocks = generateBlocks()

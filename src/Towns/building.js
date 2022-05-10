@@ -1,4 +1,4 @@
-export default class Bulding {
+class Bulding {
   constructor(props) {
     this.type = props.type
     this.description = props.description || ""

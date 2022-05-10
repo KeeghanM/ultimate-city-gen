@@ -1,4 +1,4 @@
-export let Jobs = [
+let Jobs = [
   {
     title: "Apothecary",
     building: "shop",

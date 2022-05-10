@@ -1,6 +1,6 @@
-import District from "./district"
-import Person from "./person"
-import Voronoi from "./generators/voronoi"
+const { Person } = require("./person")
+const { District } = require("./district")
+const { Voronoi } = require("./generators/voronoi")
 
 const SIZES = {
   Small: {
@@ -23,7 +23,7 @@ const SIZES = {
   },
 }
 
-export default class Town {
+class Town {
   constructor(props) {
     this.name = props.name || generateName()
     this.size = props.size || "Medium"

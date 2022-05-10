@@ -1,23 +1,27 @@
-import GenerateHumanName from "./generators/humanNames"
-import GenerateDwarfName from "./generators/dwarfNames"
-import GenerateElfName from "./generators/elfNames"
-import {
-  JobTypes,
-  HairColours,
-  EyeColours,
-  SkinColours,
-  HairDescriptors,
-  FaceDescriptors,
-  MouthDescriptors,
-  EyeDescriptors,
-  EyebrowDescriptors,
-  NoseDescriptors,
-  FacialHairDescriptors,
-  BodyDescriptors,
-} from "./generators/typeLists"
-import { toFeet, weightedRandom } from "../../lib/utils"
+const JobTypes = require("./generators/typeLists").JobTypes
+const HairColours = require("./generators/typeLists").HairColours
+const EyeColours = require("./generators/typeLists").EyeColours
+const SkinColours = require("./generators/typeLists").SkinColours
+const HairDescriptors = require("./generators/typeLists").HairDescriptors
+const FaceDescriptors = require("./generators/typeLists").FaceDescriptors
+const MouthDescriptors = require("./generators/typeLists").MouthDescriptors
+const EyeDescriptors = require("./generators/typeLists").EyeDescriptors
+const EyebrowDescriptors = require("./generators/typeLists").EyebrowDescriptors
+const NoseDescriptors = require("./generators/typeLists").NoseDescriptors
+const FacialHairDescriptors =
+  require("./generators/typeLists").FacialHairDescriptors
+const BodyDescriptors = require("./generators/typeLists").BodyDescriptors
+const GenerateHumanName = require("./generators/humanNames")
+const GenerateDwarfName = require("./generators/dwarfNames")
+const GenerateElfName = require("./generators/elfNames")
+const toFeet = (n) => {
+  var realFeet = (n * 0.3937) / 12
+  var feet = Math.floor(realFeet)
+  var inches = Math.round((realFeet - feet) * 12)
+  return feet + "'" + inches + '"'
+}
 
-export default class Person {
+class Person {
   constructor(props) {
     this.parents = props.parents || []
     this.age = props.age || generateAge(this.parents)
