@@ -32,7 +32,7 @@ createWindow = () => {
   win.setMenu(null)
   win.show()
 
-  // win.webContents.openDevTools()
+  win.webContents.openDevTools()
 }
 app.on("ready", createWindow)
 

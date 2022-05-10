@@ -59,6 +59,9 @@ function draw() {
     stroke(COLORS.primary)
     line(site.x, site.y, wallSites[nextI].x, wallSites[nextI].y)
   }
+  for (let district of districts) {
+    ellipse(district.x, district.y, 5)
+  }
   pop()
 
   // UI ELEMENTS
@@ -77,26 +80,63 @@ function registeredClick(mouseBtn) {
         y: t_mouseY,
       })
     } else if (mouseBtn === RIGHT) {
-      // Remove closest wall site - if within 15 pixels
-      let distance = Infinity
-      let closest = undefined
-      for (let site of wallSites) {
-        let curDist = distanceBetween(t_mouseX, t_mouseY, site.x, site.y)
-        if (curDist < distance) {
-          distance = curDist
-          closest = site
-        }
-      }
-      if (closest && distance < 15) {
-        let index = wallSites.indexOf(closest)
-        wallSites.splice(index, 1)
-      }
+      removeClosest(t_mouseX, t_mouseY, wallSites, 15)
     }
     wallSites = clockwiseOrder(wallSites)
+    // Check if all districts are still inside the walls
+    for (let district of districts) {
+      if (!pointInPolygon(district.x, district.y, wallSites)) {
+        districts.splice(districts.indexOf(district), 1)
+      }
+    }
+  }
+
+  if (mode == "district") {
+    if (mouseBtn === LEFT) {
+      if (pointInPolygon(t_mouseX, t_mouseY, wallSites))
+        districts.push({
+          x: t_mouseX,
+          y: t_mouseY,
+        })
+    } else if (mouseBtn === RIGHT) {
+      removeClosest(t_mouseX, t_mouseY, districts, 15)
+    }
   }
 }
 
-// MODE SETTING
+// HELPERS
+function removeClosest(x, y, arr, threshold) {
+  let distance = Infinity
+  let closest = undefined
+  for (let item of arr) {
+    let curDist = distanceBetween(x, y, item.x, item.y)
+    if (curDist < distance) {
+      distance = curDist
+      closest = item
+    }
+  }
+  if (closest && distance < threshold) {
+    let index = arr.indexOf(closest)
+    arr.splice(index, 1)
+  }
+}
+
+function pointInPolygon(x, y, poly) {
+  var inside = false
+  for (var i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    var xi = poly[i].x,
+      yi = poly[i].y
+    var xj = poly[j].x,
+      yj = poly[j].y
+
+    var intersect =
+      yi > y != yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi
+    if (intersect) inside = !inside
+  }
+
+  return inside
+}
+
 function setMode(md) {
   mode = md
   for (let btn of btnList) {
@@ -105,7 +145,6 @@ function setMode(md) {
   }
 }
 
-// HELPERS
 function distanceBetween(x1, y1, x2, y2) {
   var a = x1 - x2
   var b = y1 - y2
