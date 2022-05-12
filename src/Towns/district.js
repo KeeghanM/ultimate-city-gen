@@ -6,7 +6,7 @@ const Voronoi = require("./voronoi/rhill-voronoi-core.min.js")
 
 exports.District = class District {
   constructor(props) {
-    this.name = props.name || GenerateDistrictName()
+    this.name = props.name || props.noName ? "" : GenerateDistrictName()
     this.poly = props.poly || new Polygon([])
     this.children = []
     this.site = props.site
@@ -30,11 +30,13 @@ exports.District = class District {
   }
 
   draw(size) {
+    // Draw the polygon itself
     strokeWeight(size)
     if (this.poly.points) {
       this.poly.draw(this.col)
+      let newSize = size > 1 ? size - 1 : 0
       for (let child of this.children) {
-        child.draw(size > 1 ? size - 1 : 0)
+        child.draw(newSize)
       }
     }
   }

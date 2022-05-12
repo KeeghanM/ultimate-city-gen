@@ -32,21 +32,34 @@ let btn_addWall,
   btn_addDistrict,
   btn_addBlock,
   btn_addBuilding,
-  btn_saveWalls
+  btn_saveWalls,
+  btn_details,
+  btn_showWalls,
+  btn_save,
+  btn_labels
 let btnList = []
+let labelFont
 
 // General Variables
 let mode = "hand"
 let drawWalls = true
+let drawLabels = true
 let wallSites = []
 let wallPoly
 let town = new Town({})
 
+function preload() {
+  labelFont = loadFont("./Towns/assets/LinLibertine_RB.ttf")
+}
+
 function setup() {
   createCanvas(windowWidth, windowHeight)
+  textAlign(CENTER, CENTER)
 
   // Create UI Bar
   createFunctionButtons()
+
+  // frameRate(1)
 }
 
 function draw() {
@@ -58,30 +71,45 @@ function draw() {
   translate(transformX, transformY)
   scale(currentScale)
 
-  // DO ALL DRAWING HERE
+  if (town.district) {
+    town.district.draw({ size: 4, font: labelFont })
+  }
 
-  // DRAW WALLS
   if (drawWalls) {
-    push()
     for (i = 0; i < wallSites.length; i++) {
       let site = wallSites[i]
       let nextI = i + 1 == wallSites.length ? 0 : i + 1
-      strokeWeight(8)
+      strokeWeight(24)
       stroke(COLORS.light)
       fill(COLORS.light)
-      ellipse(site.x, site.y, 24)
+      ellipse(site.x, site.y, 60)
       line(site.x, site.y, wallSites[nextI].x, wallSites[nextI].y)
     }
-    pop()
   }
 
-  if (town.district) {
-    town.district.draw(4)
+  if (drawLabels && town.district) {
+    textSize(30)
+    fill(COLORS.dark)
+    strokeWeight(2)
+    stroke(COLORS.light)
+    for (let child of town.district.children) {
+      let centre =
+        child.poly.points.length > 1 ? child.poly.centre() : child.site
+      text(child.name, centre.x, centre.y)
+    }
   }
 
   pop()
 
   // UI ELEMENTS
+  if (town.name) {
+    textFont(labelFont)
+    noStroke()
+    fill(COLORS.primary)
+    textSize(72)
+    text(town.name, windowWidth / 2, 90)
+  }
+
   fill(0)
   rect(0, 0, windowWidth, UI_BAR_HEIGHT)
 }
@@ -244,9 +272,16 @@ function updateFunctionButtons() {
   }
 
   if (wallPoly) {
-    btn_addDistrict.removeAttribute("disabled")
+    // We have a functioning town - so switch to that mode
     btn_saveWalls.attribute("disabled", "")
     btn_addWall.attribute("disabled", "")
+
+    // Show district button as well as visual buttons
+    btn_addDistrict.removeAttribute("disabled")
+    btn_labels.removeAttribute("disabled")
+    btn_showWalls.removeAttribute("disabled")
+    btn_details.removeAttribute("disabled")
+    btn_save.removeAttribute("disabled")
   }
 
   if (town?.district?.children.length > 0) {
@@ -314,11 +349,33 @@ function createFunctionButtons() {
   btn_addBuilding.id("btn-building")
   btn_addBuilding.attribute("disabled", "")
 
+  btn_labels = createButton("🏷️").mousePressed(() => (drawLabels = !drawLabels))
+  btn_labels.position(250, 0)
+  btn_labels.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
+  btn_labels.id("btn-labels")
+  btn_labels.attribute("disabled", "")
+
+  btn_showWalls = createButton("👁️").mousePressed(
+    () => (drawWalls = !drawWalls)
+  )
+  btn_showWalls.position(300, 0)
+  btn_showWalls.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
+  btn_showWalls.id("btn-draw-walls")
+  btn_showWalls.attribute("disabled", "")
+
+  btn_details = createButton("📜").mousePressed(() => setMode("details"))
+  btn_details.position(350, 0)
+  btn_details.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
+  btn_details.id("btn-details")
+  btn_details.attribute("disabled", "")
+
   btn_save = createButton("💾").mousePressed(saveFile)
-  btn_save.position(200, 0)
+  btn_save.position(450, 0)
   btn_save.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
   btn_save.id("btn-save")
   btn_save.attribute("disabled", "")
+
+  // Open details on click 📜
 
   btnList.push(btn_hand)
   btnList.push(btn_addWall)
@@ -326,6 +383,9 @@ function createFunctionButtons() {
   btnList.push(btn_addDistrict)
   btnList.push(btn_addBlock)
   btnList.push(btn_addBuilding)
+  btnList.push(btn_labels)
+  btnList.push(btn_showWalls)
+  btnList.push(btn_details)
   btnList.push(btn_save)
 
   tippy("#btn-hand", {

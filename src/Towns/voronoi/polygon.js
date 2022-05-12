@@ -57,6 +57,7 @@ exports.Polygon = class Polygon {
   }
 
   draw(c) {
+    push()
     noFill()
     if (c) fill(c)
     beginShape()
@@ -64,5 +65,6 @@ exports.Polygon = class Polygon {
       vertex(point.x, point.y)
     }
     endShape(CLOSE)
+    pop()
   }
 }

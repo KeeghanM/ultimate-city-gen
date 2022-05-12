@@ -32,7 +32,7 @@ exports.Town = class Town {
     let site = poly.centre()
 
     this.district = new District({
-      name: this.name,
+      noName: true,
       site,
       poly,
     })
