@@ -1296,7 +1296,7 @@ var nm5 = [
   "Yesanith",
   "Zeno",
 ]
-function GenerateElfName(type) {
+exports.GenerateElfName = function GenerateElfName(type) {
   var tp = type
   let names
   for (let i = 0; i < 10; i++) {

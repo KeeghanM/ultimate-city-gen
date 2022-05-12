@@ -45,7 +45,6 @@
     }
   },
   "dependencies": {
-    "@zbryikt/voronoijs": "github:zbryikt/voronoijs",
     "electron-squirrel-startup": "^1.0.0",
     "p5": "^1.4.1",
     "tippy.js": "^6.3.7"

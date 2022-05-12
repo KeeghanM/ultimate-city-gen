@@ -1148,7 +1148,7 @@ var nm8 = [
   "tank",
   "view",
 ]
-function GenerateDwarfName(type) {
+exports.GenerateDwarfName = function GenerateDwarfName(type) {
   var tp = type
   let names
   for (let i = 0; i < 10; i++) {

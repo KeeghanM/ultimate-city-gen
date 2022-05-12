@@ -1,8 +1,11 @@
 // IMPORTS AND CONSTS
 const { ipcRenderer } = require("electron")
 const { p5 } = require("p5")
-const { town } = require("./Towns/Town")
-const { voronoi } = require("@zbryikt/voronoijs")
+const { Polygon } = require("./Towns/voronoi/polygon")
+const { Town } = require("./Towns/town")
+const { Site } = require("./Towns/voronoi/site")
+const { District } = require("./Towns/district")
+
 const COLORS = {
   dark: "#333",
   light: "#999",
@@ -24,16 +27,20 @@ let mousePressedY = null
 const mouseDragDetectionThreshold = 10
 
 // UI ELEMENTS
-let btn_addWall, btn_hand, btn_addDistrict, btn_addBlock, btn_addBuilding
+let btn_addWall,
+  btn_hand,
+  btn_addDistrict,
+  btn_addBlock,
+  btn_addBuilding,
+  btn_saveWalls
 let btnList = []
-
-// GROUPS
-let wallSites = []
-let districts = []
-let blocks = []
 
 // General Variables
 let mode = "hand"
+let drawWalls = true
+let wallSites = []
+let wallPoly
+let town = new Town({})
 
 function setup() {
   createCanvas(windowWidth, windowHeight)
@@ -50,18 +57,28 @@ function draw() {
   push()
   translate(transformX, transformY)
   scale(currentScale)
+
   // DO ALL DRAWING HERE
-  fill(COLORS.primary)
-  for (i = 0; i < wallSites.length; i++) {
-    let site = wallSites[i]
-    let nextI = i + 1 == wallSites.length ? 0 : i + 1
-    ellipse(site.x, site.y, 15)
-    stroke(COLORS.primary)
-    line(site.x, site.y, wallSites[nextI].x, wallSites[nextI].y)
+
+  // DRAW WALLS
+  if (drawWalls) {
+    push()
+    for (i = 0; i < wallSites.length; i++) {
+      let site = wallSites[i]
+      let nextI = i + 1 == wallSites.length ? 0 : i + 1
+      strokeWeight(8)
+      stroke(COLORS.light)
+      fill(COLORS.light)
+      ellipse(site.x, site.y, 24)
+      line(site.x, site.y, wallSites[nextI].x, wallSites[nextI].y)
+    }
+    pop()
   }
-  for (let district of districts) {
-    ellipse(district.x, district.y, 5)
+
+  if (town.district) {
+    town.district.draw(4)
   }
+
   pop()
 
   // UI ELEMENTS
@@ -83,21 +100,16 @@ function registeredClick(mouseBtn) {
       removeClosest(t_mouseX, t_mouseY, wallSites, 15)
     }
     wallSites = clockwiseOrder(wallSites)
-    // Check if all districts are still inside the walls
-    for (let district of districts) {
-      if (!pointInPolygon(district.x, district.y, wallSites)) {
-        districts.splice(districts.indexOf(district), 1)
-      }
-    }
   }
 
   if (mode == "district") {
     if (mouseBtn === LEFT) {
-      if (pointInPolygon(t_mouseX, t_mouseY, wallSites))
-        districts.push({
-          x: t_mouseX,
-          y: t_mouseY,
-        })
+      if (pointInPolygon(t_mouseX, t_mouseY, wallSites)) {
+        let site = new Site(t_mouseX, t_mouseY)
+        let newDistrict = new District({ site })
+        town.district.children.push(newDistrict)
+        town.district.calcV(10)
+      }
     } else if (mouseBtn === RIGHT) {
       removeClosest(t_mouseX, t_mouseY, districts, 15)
     }
@@ -227,23 +239,43 @@ function mouseWheel(event) {
 
 // UI ELEMENTS
 function updateFunctionButtons() {
-  if (wallSites.length < 3) {
-    btn_addDistrict.attribute("disabled", "")
-  } else {
-    btn_addDistrict.removeAttribute("disabled")
+  if (wallSites.length > 3) {
+    btn_saveWalls.removeAttribute("disabled")
   }
 
-  if (districts.length < 1) {
-    btn_addBlock.attribute("disabled", "")
-  } else {
+  if (wallPoly) {
+    btn_addDistrict.removeAttribute("disabled")
+    btn_saveWalls.attribute("disabled", "")
+    btn_addWall.attribute("disabled", "")
+  }
+
+  if (town?.district?.children.length > 0) {
     btn_addBlock.removeAttribute("disabled")
   }
 
-  if (blocks.length < 1) {
-    btn_addBuilding.attribute("disabled", "")
-  } else {
-    btn_addBuilding.removeAttribute("disabled")
+  // if (districts.length < 1) {
+  //   btn_addBlock.attribute("disabled", "")
+  // } else {
+  //   btn_addBlock.removeAttribute("disabled")
+  // }
+
+  // if (blocks.length < 1) {
+  //   btn_addBuilding.attribute("disabled", "")
+  // } else {
+  //   btn_addBuilding.removeAttribute("disabled")
+  // }
+}
+
+function saveWalls() {
+  if (wallSites.length > 3) {
+    wallPoly = new Polygon(wallSites)
+    town.setDistrict(wallPoly)
+    setMode("hand")
   }
+}
+
+function saveFile() {
+  return
 }
 
 function createFunctionButtons() {
@@ -258,26 +290,43 @@ function createFunctionButtons() {
   btn_addWall.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
   btn_addWall.id("btn-wall")
 
+  btn_saveWalls = createButton("✔️").mousePressed(saveWalls)
+  btn_saveWalls.position(100, 0)
+  btn_saveWalls.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
+  btn_saveWalls.id("btn-save-walls")
+  btn_saveWalls.attribute("disabled", "")
+
   btn_addDistrict = createButton("🚧").mousePressed(() => setMode("district"))
-  btn_addDistrict.position(100, 0)
+  btn_addDistrict.position(50, 0)
   btn_addDistrict.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
   btn_addDistrict.id("btn-district")
+  btn_addDistrict.attribute("disabled", "")
 
   btn_addBlock = createButton("🔳").mousePressed(() => setMode("block"))
-  btn_addBlock.position(150, 0)
+  btn_addBlock.position(100, 0)
   btn_addBlock.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
   btn_addBlock.id("btn-block")
+  btn_addBlock.attribute("disabled", "")
 
   btn_addBuilding = createButton("🏛️").mousePressed(() => setMode("building"))
-  btn_addBuilding.position(200, 0)
+  btn_addBuilding.position(150, 0)
   btn_addBuilding.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
   btn_addBuilding.id("btn-building")
+  btn_addBuilding.attribute("disabled", "")
+
+  btn_save = createButton("💾").mousePressed(saveFile)
+  btn_save.position(200, 0)
+  btn_save.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
+  btn_save.id("btn-save")
+  btn_save.attribute("disabled", "")
 
   btnList.push(btn_hand)
   btnList.push(btn_addWall)
+  btnList.push(btn_saveWalls)
   btnList.push(btn_addDistrict)
   btnList.push(btn_addBlock)
   btnList.push(btn_addBuilding)
+  btnList.push(btn_save)
 
   tippy("#btn-hand", {
     content: "Hand Mode",
@@ -287,6 +336,12 @@ function createFunctionButtons() {
   })
   tippy("#btn-wall", {
     content: "Add Walls (left click to add, right click to remove)",
+    arrow: true,
+    placement: "bottom",
+    theme: "light",
+  })
+  tippy("#btn-save-walls", {
+    content: "Confirm Walls",
     arrow: true,
     placement: "bottom",
     theme: "light",
@@ -305,6 +360,12 @@ function createFunctionButtons() {
   })
   tippy("#btn-building", {
     content: "Add Buildings (left click to add, right click to remove)",
+    arrow: true,
+    placement: "bottom",
+    theme: "light",
+  })
+  tippy("#btn-save", {
+    content: "Save your town to file",
     arrow: true,
     placement: "bottom",
     theme: "light",

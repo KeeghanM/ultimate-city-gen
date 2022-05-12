@@ -3259,7 +3259,7 @@ var nm11 = [
   "York",
   "Young",
 ]
-function GenerateHumanName(type) {
+exports.GenerateHumanName = function GenerateHumanName(type) {
   var tp = type
   let names
   for (let i = 0; i < 10; i++) {
