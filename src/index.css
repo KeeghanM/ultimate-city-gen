@@ -1,0 +1,21 @@
+html,body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+button {
+    background: none;
+    border:none;
+    font-size: 2rem;
+    text-align: center;
+}
+button:disabled {
+    display: none;
+}
+button:hover {
+    background: #5B8E7D;
+}
+.active, button:focus, button:active {
+    background: #F4A259;
+}

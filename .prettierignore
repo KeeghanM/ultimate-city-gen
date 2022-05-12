@@ -2,4 +2,5 @@
 **/.svn
 **/.hg
 **/node_modules
-**/generators
+*/generators
+*.min.js
