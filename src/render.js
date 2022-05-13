@@ -107,6 +107,31 @@ function draw() {
     text(town.name, windowWidth / 2, 90)
   }
 
+  if (mode == "details") {
+    let detailWidth = 400
+    let borderWidth = 5
+    fill(COLORS.accent)
+    rect(
+      windowWidth - detailWidth - borderWidth,
+      UI_BAR_HEIGHT,
+      windowWidth - detailWidth,
+      windowHeight - UI_BAR_HEIGHT
+    )
+
+    fill(COLORS.dark)
+    rect(
+      windowWidth - detailWidth,
+      UI_BAR_HEIGHT,
+      detailWidth,
+      windowHeight - UI_BAR_HEIGHT
+    )
+
+    fill(COLORS.primary)
+    noStroke()
+    textSize(50)
+    text("Details", windowWidth - detailWidth / 2, 90)
+  }
+
   fill(0)
   rect(0, 0, windowWidth, UI_BAR_HEIGHT)
 }
@@ -134,11 +159,6 @@ function registeredClick(mouseBtn) {
         let newDistrict = new District({ site })
         town.district.children.push(newDistrict)
         town.district.calcV(10)
-
-        // Auto generate some blocks based on area
-        town.district.children[
-          town.district.children.length - 1
-        ].generateChildren(undefined, 5, true)
       }
     } else if (mouseBtn === RIGHT) {
       // removeClosest(t_mouseX, t_mouseY, districts, 15)

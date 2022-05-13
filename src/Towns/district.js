@@ -31,21 +31,6 @@ exports.District = class District {
     }
   }
 
-  generateChildren(count, clipSize, noName = true) {
-    let childCount = count || this.poly.area() / 20000
-    for (let i = 0; i < childCount; i++) {
-      console.log("In")
-      let newPoint = GenerateRandomPoint(this.poly)
-      let newSite = new Site(newPoint.x, newPoint.y)
-      let newChild = new District({
-        noName,
-        newSite,
-      })
-      this.children.push(newChild)
-    }
-    this.calcV(clipSize)
-  }
-
   draw(size) {
     // Draw the polygon itself
     strokeWeight(size)
