@@ -3,6 +3,8 @@ const { GenerateDistrictName } = require("./generators/districtNames")
 const { Polygon } = require("./voronoi/polygon")
 const { OffsetPath } = require("./voronoi/offset")
 const Voronoi = require("./voronoi/rhill-voronoi-core.min.js")
+const { pointInPolygon, GenerateRandomPoint } = require("./assets/helpers")
+const { Site } = require("./voronoi/site")
 
 exports.District = class District {
   constructor(props) {
@@ -29,6 +31,21 @@ exports.District = class District {
     }
   }
 
+  generateChildren(count, clipSize, noName = true) {
+    let childCount = count || this.poly.area() / 20000
+    for (let i = 0; i < childCount; i++) {
+      console.log("In")
+      let newPoint = GenerateRandomPoint(this.poly)
+      let newSite = new Site(newPoint.x, newPoint.y)
+      let newChild = new District({
+        noName,
+        newSite,
+      })
+      this.children.push(newChild)
+    }
+    this.calcV(clipSize)
+  }
+
   draw(size) {
     // Draw the polygon itself
     strokeWeight(size)
@@ -42,7 +59,7 @@ exports.District = class District {
   }
 
   findAllClicked(x, y, returnArr) {
-    if (pointInPoly(x, y, this.poly)) {
+    if (pointInPolygon(x, y, this.poly.points)) {
       returnArr.push(this)
       for (let child of this.children) {
         child.findAllClicked(x, y, returnArr)

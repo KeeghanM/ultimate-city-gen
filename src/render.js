@@ -5,6 +5,13 @@ const { Polygon } = require("./Towns/voronoi/polygon")
 const { Town } = require("./Towns/town")
 const { Site } = require("./Towns/voronoi/site")
 const { District } = require("./Towns/district")
+const {
+  removeClosest,
+  pointInPolygon,
+  setMode,
+  distanceBetween,
+  clockwiseOrder,
+} = require("./Towns/assets/helpers")
 
 const COLORS = {
   dark: "#333",
@@ -115,7 +122,7 @@ function registeredClick(mouseBtn) {
         y: t_mouseY,
       })
     } else if (mouseBtn === RIGHT) {
-      removeClosest(t_mouseX, t_mouseY, wallSites, 15)
+      removeClosest(t_mouseX, t_mouseY, wallSites, 60)
     }
     wallSites = clockwiseOrder(wallSites)
   }
@@ -127,84 +134,31 @@ function registeredClick(mouseBtn) {
         let newDistrict = new District({ site })
         town.district.children.push(newDistrict)
         town.district.calcV(10)
+
+        // Auto generate some blocks based on area
+        town.district.children[
+          town.district.children.length - 1
+        ].generateChildren(undefined, 5, true)
       }
     } else if (mouseBtn === RIGHT) {
-      removeClosest(t_mouseX, t_mouseY, districts, 15)
+      // removeClosest(t_mouseX, t_mouseY, districts, 15)
+      // TODO: Remove districts?
     }
   }
-}
 
-// HELPERS
-function removeClosest(x, y, arr, threshold) {
-  let distance = Infinity
-  let closest = undefined
-  for (let item of arr) {
-    let curDist = distanceBetween(x, y, item.x, item.y)
-    if (curDist < distance) {
-      distance = curDist
-      closest = item
+  if (mode == "block") {
+    if (mouseBtn === LEFT) {
+      let allClicked = []
+      town.district.findAllClicked(t_mouseX, t_mouseY, allClicked)
+      if (allClicked.length > 1) {
+        let clickedDistrict = allClicked[1]
+        let site = new Site(t_mouseX, t_mouseY)
+        let newDistrict = new District({ site })
+        clickedDistrict.children.push(newDistrict)
+        clickedDistrict.calcV(5)
+      }
     }
   }
-  if (closest && distance < threshold) {
-    let index = arr.indexOf(closest)
-    arr.splice(index, 1)
-  }
-}
-
-function pointInPolygon(x, y, poly) {
-  var inside = false
-  for (var i = 0, j = poly.length - 1; i < poly.length; j = i++) {
-    var xi = poly[i].x,
-      yi = poly[i].y
-    var xj = poly[j].x,
-      yj = poly[j].y
-
-    var intersect =
-      yi > y != yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi
-    if (intersect) inside = !inside
-  }
-
-  return inside
-}
-
-function setMode(md) {
-  mode = md
-  for (let btn of btnList) {
-    btn.removeClass("active")
-    if (btn.id() === "btn-" + md) btn.addClass("active")
-  }
-}
-
-function distanceBetween(x1, y1, x2, y2) {
-  var a = x1 - x2
-  var b = y1 - y2
-
-  return Math.sqrt(a * a + b * b)
-}
-
-function clockwiseOrder(points) {
-  const center = points.reduce(
-    (acc, { x, y }) => {
-      acc.x += x / points.length
-      acc.y += y / points.length
-      return acc
-    },
-    { x: 0, y: 0 }
-  )
-
-  // Add an angle property to each point using tan(angle) = y/x
-  const angles = points.map(({ x, y }) => {
-    return {
-      x,
-      y,
-      angle: (Math.atan2(y - center.y, x - center.x) * 180) / Math.PI,
-    }
-  })
-
-  // Sort your points by angle
-  const pointsSorted = angles.sort((a, b) => a.angle - b.angle)
-
-  return pointsSorted
 }
 
 // PAN AND ZOOM LOGIC
@@ -277,12 +231,6 @@ function updateFunctionButtons() {
   if (town?.district?.children.length > 0) {
     btn_addBlock.removeAttribute("disabled")
   }
-
-  // if (districts.length < 1) {
-  //   btn_addBlock.attribute("disabled", "")
-  // } else {
-  //   btn_addBlock.removeAttribute("disabled")
-  // }
 
   // if (blocks.length < 1) {
   //   btn_addBuilding.attribute("disabled", "")
