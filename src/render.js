@@ -27,16 +27,6 @@ let mousePressedY = null
 const mouseDragDetectionThreshold = 10
 
 // UI ELEMENTS
-let btn_addWall,
-  btn_hand,
-  btn_addDistrict,
-  btn_addBlock,
-  btn_addBuilding,
-  btn_saveWalls,
-  btn_details,
-  btn_showWalls,
-  btn_save,
-  btn_labels
 let btnList = []
 let labelFont
 
@@ -278,7 +268,7 @@ function updateFunctionButtons() {
 
     // Show district button as well as visual buttons
     btn_addDistrict.removeAttribute("disabled")
-    btn_labels.removeAttribute("disabled")
+    btn_showLabels.removeAttribute("disabled")
     btn_showWalls.removeAttribute("disabled")
     btn_details.removeAttribute("disabled")
     btn_save.removeAttribute("disabled")
@@ -314,120 +304,113 @@ function saveFile() {
 }
 
 function createFunctionButtons() {
-  btn_hand = createButton("✋").mousePressed(() => setMode("hand"))
-  btn_hand.position(0, 0)
-  btn_hand.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
-  btn_hand.addClass("active")
-  btn_hand.id("btn-hand")
-
-  btn_addWall = createButton("🧱").mousePressed(() => setMode("wall"))
-  btn_addWall.position(50, 0)
-  btn_addWall.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
-  btn_addWall.id("btn-wall")
-
-  btn_saveWalls = createButton("✔️").mousePressed(saveWalls)
-  btn_saveWalls.position(100, 0)
-  btn_saveWalls.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
-  btn_saveWalls.id("btn-save-walls")
-  btn_saveWalls.attribute("disabled", "")
-
-  btn_addDistrict = createButton("🚧").mousePressed(() => setMode("district"))
-  btn_addDistrict.position(50, 0)
-  btn_addDistrict.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
-  btn_addDistrict.id("btn-district")
-  btn_addDistrict.attribute("disabled", "")
-
-  btn_addBlock = createButton("🔳").mousePressed(() => setMode("block"))
-  btn_addBlock.position(100, 0)
-  btn_addBlock.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
-  btn_addBlock.id("btn-block")
-  btn_addBlock.attribute("disabled", "")
-
-  btn_addBuilding = createButton("🏛️").mousePressed(() => setMode("building"))
-  btn_addBuilding.position(150, 0)
-  btn_addBuilding.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
-  btn_addBuilding.id("btn-building")
-  btn_addBuilding.attribute("disabled", "")
-
-  btn_labels = createButton("🏷️").mousePressed(() => (drawLabels = !drawLabels))
-  btn_labels.position(250, 0)
-  btn_labels.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
-  btn_labels.id("btn-labels")
-  btn_labels.attribute("disabled", "")
-
-  btn_showWalls = createButton("👁️").mousePressed(
+  btn_hand = addButton(
+    "✋",
+    { x: 0, y: 0 },
+    "hand",
+    false,
+    "Hand (navigation) mode",
+    () => setMode("hand")
+  )
+  btn_addWall = addButton(
+    "🧱",
+    { x: 50, y: 0 },
+    "wall",
+    false,
+    "Add Walls (left click to add, right click to remove)",
+    () => setMode("wall")
+  )
+  btn_saveWalls = addButton(
+    "✔️",
+    { x: 100, y: 0 },
+    "save-walls",
+    true,
+    "Confirm Walls",
+    saveWalls
+  )
+  btn_addDistrict = addButton(
+    "🚧",
+    { x: 50, y: 0 },
+    "district",
+    true,
+    "Add Districts (left click to add, right click to remove)",
+    () => setMode("district")
+  )
+  btn_addBlock = addButton(
+    "🔳",
+    { x: 100, y: 0 },
+    "block",
+    true,
+    "Add Blocks (left click to add, right click to remove)",
+    () => setMode("block")
+  )
+  btn_addBuilding = addButton(
+    "🏛️",
+    { x: 150, y: 0 },
+    "building",
+    true,
+    "Add Buildings (left click to add, right click to remove)",
+    () => setMode("building")
+  )
+  btn_showLabels = addButton(
+    "🏷️",
+    { x: 250, y: 0 },
+    "labels",
+    true,
+    "Show or Hide district labels on the map",
+    () => (drawLabels = !drawLabels)
+  )
+  btn_showWalls = addButton(
+    "👁️",
+    { x: 300, y: 0 },
+    "draw-walls",
+    true,
+    "Show or Hide the town walls",
     () => (drawWalls = !drawWalls)
   )
-  btn_showWalls.position(300, 0)
-  btn_showWalls.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
-  btn_showWalls.id("btn-draw-walls")
-  btn_showWalls.attribute("disabled", "")
+  btn_details = addButton(
+    "📜",
+    { x: 350, y: 0 },
+    "details",
+    true,
+    "View & edit details for town/districts/buildings",
+    () => setMode("details")
+  )
+  btn_save = addButton(
+    "💾",
+    { x: 450, y: 0 },
+    "save",
+    true,
+    "View & edit details for town/districts/buildings",
+    saveFile
+  )
+}
 
-  btn_details = createButton("📜").mousePressed(() => setMode("details"))
-  btn_details.position(350, 0)
-  btn_details.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
-  btn_details.id("btn-details")
-  btn_details.attribute("disabled", "")
+function addButton(text, pos, id, disabled, tooltip, onClickFnc, size) {
+  let btn = createButton(text)
+  btn.position(pos.x, pos.y)
+  if (size) {
+    btn.size(size.w, size.h)
+  } else {
+    btn.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
+  }
 
-  btn_save = createButton("💾").mousePressed(saveFile)
-  btn_save.position(450, 0)
-  btn_save.size(UI_BAR_HEIGHT, UI_BAR_HEIGHT)
-  btn_save.id("btn-save")
-  btn_save.attribute("disabled", "")
+  btn.id("btn-" + id)
 
-  // Open details on click 📜
+  if (disabled) btn.attribute("disabled", "")
 
-  btnList.push(btn_hand)
-  btnList.push(btn_addWall)
-  btnList.push(btn_saveWalls)
-  btnList.push(btn_addDistrict)
-  btnList.push(btn_addBlock)
-  btnList.push(btn_addBuilding)
-  btnList.push(btn_labels)
-  btnList.push(btn_showWalls)
-  btnList.push(btn_details)
-  btnList.push(btn_save)
+  if (tooltip) {
+    tippy("#btn-" + id, {
+      content: tooltip,
+      arrow: true,
+      placement: "bottom",
+      theme: "light",
+    })
+  }
 
-  tippy("#btn-hand", {
-    content: "Hand Mode",
-    arrow: true,
-    placement: "bottom",
-    theme: "light",
-  })
-  tippy("#btn-wall", {
-    content: "Add Walls (left click to add, right click to remove)",
-    arrow: true,
-    placement: "bottom",
-    theme: "light",
-  })
-  tippy("#btn-save-walls", {
-    content: "Confirm Walls",
-    arrow: true,
-    placement: "bottom",
-    theme: "light",
-  })
-  tippy("#btn-district", {
-    content: "Add Districts (left click to add, right click to remove)",
-    arrow: true,
-    placement: "bottom",
-    theme: "light",
-  })
-  tippy("#btn-block", {
-    content: "Add Blocks (left click to add, right click to remove)",
-    arrow: true,
-    placement: "bottom",
-    theme: "light",
-  })
-  tippy("#btn-building", {
-    content: "Add Buildings (left click to add, right click to remove)",
-    arrow: true,
-    placement: "bottom",
-    theme: "light",
-  })
-  tippy("#btn-save", {
-    content: "Save your town to file",
-    arrow: true,
-    placement: "bottom",
-    theme: "light",
-  })
+  btn.mousePressed(onClickFnc)
+
+  btnList.push(btn)
+
+  return btn
 }
