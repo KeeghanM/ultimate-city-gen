@@ -36,16 +36,24 @@ exports.setMode = function setMode(md) {
     btn.removeClass("active")
     if (btn.id() === "btn-" + md) btn.addClass("active")
   }
-  // if (md == "detail") {
-  //   detailPane.show()
-  // } else {
-  //   detailPane.hide()
-  // }
+  if (md == "details") {
+    detailPane.show()
+  } else {
+    detailPane.hide()
+  }
 }
 
 exports.toggle = function toggle(elem) {
   if (elem.elt.attributes.style.value.includes("display: none;")) {
     elem.show()
+  } else {
+    elem.hide()
+  }
+}
+
+exports.toggleDetailSection = function toggleDetailSection(elem) {
+  if (elem.elt.attributes.style.value.includes("display: none;")) {
+    elem.style("display", "flex")
   } else {
     elem.hide()
   }

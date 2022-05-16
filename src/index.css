@@ -19,6 +19,9 @@ button:hover {
 .active, button:focus, button:active {
     background: #F4A259;
 }
+#detail-pane {
+    padding: 1rem;
+}
 h1{
     color:#5B8E7D;
     font-size: 2rem;
@@ -27,4 +30,15 @@ h1{
 h1:hover {
     color: #F4A259;
     cursor: pointer;
+}
+label {
+    color: #999;
+}
+input,textarea {
+    width: 250px;
+    padding: 5px 10px;
+}
+.detail-section {
+    display: flex;
+    flex-direction: column;
 }

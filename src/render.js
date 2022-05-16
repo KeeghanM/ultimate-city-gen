@@ -9,7 +9,7 @@ const {
   removeClosest,
   pointInPolygon,
   setMode,
-  toggle,
+  toggleDetailSection,
   clockwiseOrder,
 } = require("./Towns/assets/helpers")
 
@@ -47,6 +47,10 @@ let drawLabels = true
 let wallSites = []
 let wallPoly
 let town = new Town({})
+
+// Currently Selected Items
+let currentDistrict
+let currentBuilding
 
 function preload() {
   labelFont = loadFont("./Towns/assets/LinLibertine_RB.ttf")
@@ -180,12 +184,29 @@ function registeredClick(mouseBtn) {
       }
     }
   }
+
+  if (mode == "details") {
+    if (
+      mouseBtn === LEFT &&
+      mouseX < windowWidth - DETAIL_WIDTH - BORDER_WIDTH
+    ) {
+      let allClicked = []
+      town.district.findAllClicked(t_mouseX, t_mouseY, allClicked)
+      if (allClicked.length > 1) {
+        currentDistrict = allClicked[1]
+        districtNameInput.value(currentDistrict.name)
+      }
+      if (allClicked.length > 2) {
+        currentBuilding = allClicked[3]
+      }
+    }
+  }
 }
 
 // PAN AND ZOOM LOGIC
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight)
-  detailPane.position(windowWidth - DETAIL_WIDTH, UI_BAR_HEIGHT + 100)
+  detailPane?.position(windowWidth - DETAIL_WIDTH, UI_BAR_HEIGHT + 100)
 }
 
 function mousePressed() {
@@ -196,7 +217,8 @@ function mousePressed() {
 function mouseDragged() {
   if (
     dist(mousePressedX, mousePressedY, mouseX, mouseY) >
-    mouseDragDetectionThreshold
+      mouseDragDetectionThreshold &&
+    (!mode == "details" || mouseX < windowWidth - DETAIL_WIDTH - BORDER_WIDTH)
   ) {
     isMouseDragged = true
     transformX += mouseX - pmouseX
@@ -385,24 +407,63 @@ function addButton(text, pos, id, disabled, tooltip, onClickFnc, size) {
   return btn
 }
 
+// DETAIL PANE
+let townHeader,
+  townSection,
+  townNameLabel,
+  townNameInput,
+  townDescriptionLabel,
+  townDescription,
+  districtHeader,
+  districtNameLabel,
+  districtNameInput,
+  buildingHeader,
+  buildingSection
+
 function createDetailPane() {
-  detailPane = createDiv()
+  detailPane = createDiv().id("detail-pane")
   detailPane.position(windowWidth - DETAIL_WIDTH, UI_BAR_HEIGHT + 100)
-  let townHeader = createElement("h1", "Town 🔽")
-    .parent(detailPane)
-    .mousePressed(() => toggle(townSection))
-  let townSection = createDiv().parent(detailPane).hide()
-  let townNameInput = createElement("input", "Town Name").parent(townSection)
 
-  let districtHeader = createElement("h1", "District 🔽")
+  townHeader = createElement("h1", "Town 🔽")
     .parent(detailPane)
-    .mousePressed(() => toggle(districtSection))
-  let districtSection = createDiv().parent(detailPane).hide()
+    .mousePressed(() => toggleDetailSection(townSection))
+  townSection = createDiv().parent(detailPane).class("detail-section").hide()
+  townNameLabel = createElement("label", "Town Name:").parent(townSection)
+  townNameInput = createInput(town.name, "text")
+    .parent(townSection)
+    .input(updateTown)
+  townDescriptionLabel = createElement("label", "Town Description:").parent(
+    townSection
+  )
+  townDescription = createElement("textarea").parent(townSection)
 
-  let buildingHeader = createElement("h1", "Building 🔽")
+  districtHeader = createElement("h1", "District 🔽")
     .parent(detailPane)
-    .mousePressed(() => toggle(buildingSection))
-  let buildingSection = createDiv().parent(detailPane).hide()
+    .mousePressed(() => toggleDetailSection(districtSection))
+  districtSection = createDiv()
+    .parent(detailPane)
+    .class("detail-section")
+    .hide()
 
-  detailPane.hide()
+  districtNameLabel = createElement("label", "District Name:").parent(
+    districtSection
+  )
+  districtNameInput = createInput(currentDistrict?.name, "text")
+    .parent(districtSection)
+    .input(() => updateDistrict(currentDistrict))
+
+  buildingHeader = createElement("h1", "Building 🔽")
+    .parent(detailPane)
+    .mousePressed(() => toggleDetailSection(buildingSection))
+  buildingSection = createDiv()
+    .parent(detailPane)
+    .class("detail-section")
+    .hide()
+}
+
+function updateDistrict(district) {
+  currentDistrict.name = districtNameInput.value()
+}
+function updateTown() {
+  town.name = townNameInput.value()
 }
