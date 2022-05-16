@@ -47,6 +47,7 @@ let drawLabels = true
 let wallSites = []
 let wallPoly
 let town = new Town({})
+let districtsSaved = false
 
 // Currently Selected Items
 let currentDistrict
@@ -255,32 +256,23 @@ function mouseWheel(event) {
 
 // UI ELEMENTS
 function updateFunctionButtons() {
-  if (wallSites.length > 3) {
+  if (wallSites.length > 3 && town.district == undefined) {
     btn_saveWalls.removeAttribute("disabled")
   }
 
-  if (wallPoly) {
-    // We have a functioning town - so switch to that mode
+  if (town.district?.children.length > 1 && !districtsSaved) {
+    btn_saveDistricts.removeAttribute("disabled")
+  }
+
+  if (wallPoly && !districtsSaved) {
     btn_saveWalls.attribute("disabled", "")
     btn_addWall.attribute("disabled", "")
-
-    // Show district button as well as visual buttons
     btn_addDistrict.removeAttribute("disabled")
     btn_showLabels.removeAttribute("disabled")
     btn_showWalls.removeAttribute("disabled")
     btn_details.removeAttribute("disabled")
     btn_save.removeAttribute("disabled")
   }
-
-  if (town?.district?.children.length > 0) {
-    btn_addBlock.removeAttribute("disabled")
-  }
-
-  // if (blocks.length < 1) {
-  //   btn_addBuilding.attribute("disabled", "")
-  // } else {
-  //   btn_addBuilding.removeAttribute("disabled")
-  // }
 }
 
 function saveWalls() {
@@ -289,6 +281,14 @@ function saveWalls() {
     town.setDistrict(wallPoly)
     setMode("hand")
   }
+}
+
+function saveDistricts() {
+  districtsSaved = true
+  btn_addBlock.removeAttribute("disabled")
+  btn_addDistrict.attribute("disabled", "")
+  btn_saveDistricts.attribute("disabled", "")
+  setMode("hand")
 }
 
 function saveFile() {
@@ -317,7 +317,7 @@ function createFunctionButtons() {
     { x: 100, y: 0 },
     "save-walls",
     true,
-    "Confirm Walls",
+    "Confirm Walls: Save the current town shape and move onto adding districts. You won't be able to change the general town shape after this.",
     saveWalls
   )
   btn_addDistrict = addButton(
@@ -328,9 +328,17 @@ function createFunctionButtons() {
     "Add Districts (left click to add, right click to remove)",
     () => setMode("district")
   )
+  btn_saveDistricts = addButton(
+    "✔️",
+    { x: 100, y: 0 },
+    "save-districts",
+    true,
+    "Confirm Districts: Save the current districts and move onto defining blocks. You will still be able to edit names & types, but will be unable to add or remove any districts.",
+    saveDistricts
+  )
   btn_addBlock = addButton(
     "🔳",
-    { x: 100, y: 0 },
+    { x: 50, y: 0 },
     "block",
     true,
     "Add Blocks (left click to add, right click to remove)",
@@ -338,7 +346,7 @@ function createFunctionButtons() {
   )
   btn_addBuilding = addButton(
     "🏛️",
-    { x: 150, y: 0 },
+    { x: 50, y: 0 },
     "building",
     true,
     "Add Buildings (left click to add, right click to remove)",
