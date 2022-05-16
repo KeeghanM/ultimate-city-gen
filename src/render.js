@@ -286,9 +286,24 @@ function saveWalls() {
 function saveDistricts() {
   districtsSaved = true
   btn_addBlock.removeAttribute("disabled")
+  btn_saveBlocks.removeAttribute("disabled")
   btn_addDistrict.attribute("disabled", "")
   btn_saveDistricts.attribute("disabled", "")
   setMode("hand")
+}
+
+function saveBlocks() {
+  let valid = true
+  for (let district of town.district.children) {
+    if (district.children.length < 2) valid = false
+  }
+
+  if (valid) {
+    btn_addBuilding.removeAttribute("disabled")
+    btn_addBlock.attribute("disabled", "")
+    btn_saveBlocks.attribute("disabled", "")
+    setMode("building")
+  }
 }
 
 function saveFile() {
@@ -343,6 +358,14 @@ function createFunctionButtons() {
     true,
     "Add Blocks (left click to add, right click to remove)",
     () => setMode("block")
+  )
+  btn_saveBlocks = addButton(
+    "✔️",
+    { x: 100, y: 0 },
+    "save-districts",
+    true,
+    "Confirm Blocks: Save the current blocks and move onto adding buildings. You will be unable to add or remove any blocks.",
+    saveBlocks
   )
   btn_addBuilding = addButton(
     "🏛️",
