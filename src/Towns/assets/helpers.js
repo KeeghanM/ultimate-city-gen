@@ -36,6 +36,19 @@ exports.setMode = function setMode(md) {
     btn.removeClass("active")
     if (btn.id() === "btn-" + md) btn.addClass("active")
   }
+  // if (md == "detail") {
+  //   detailPane.show()
+  // } else {
+  //   detailPane.hide()
+  // }
+}
+
+exports.toggle = function toggle(elem) {
+  if (elem.elt.attributes.style.value.includes("display: none;")) {
+    elem.show()
+  } else {
+    elem.hide()
+  }
 }
 
 exports.distanceBetween = function distanceBetween(x1, y1, x2, y2) {

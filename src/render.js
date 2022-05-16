@@ -9,7 +9,7 @@ const {
   removeClosest,
   pointInPolygon,
   setMode,
-  distanceBetween,
+  toggle,
   clockwiseOrder,
 } = require("./Towns/assets/helpers")
 
@@ -22,6 +22,8 @@ const COLORS = {
   success: "#8CB369",
 }
 const UI_BAR_HEIGHT = 50
+const DETAIL_WIDTH = 400
+const BORDER_WIDTH = 5
 
 // ZOOM AND PAN
 const zoomSensitivity = 0.1
@@ -36,6 +38,7 @@ const mouseDragDetectionThreshold = 10
 // UI ELEMENTS
 let btnList = []
 let labelFont
+let detailPane
 
 // General Variables
 let mode = "hand"
@@ -53,10 +56,10 @@ function setup() {
   createCanvas(windowWidth, windowHeight)
   textAlign(CENTER, CENTER)
 
-  // Create UI Bar
   createFunctionButtons()
+  createDetailPane()
 
-  // frameRate(1)
+  setMode("hand")
 }
 
 function draw() {
@@ -108,28 +111,26 @@ function draw() {
   }
 
   if (mode == "details") {
-    let detailWidth = 400
-    let borderWidth = 5
     fill(COLORS.accent)
     rect(
-      windowWidth - detailWidth - borderWidth,
+      windowWidth - DETAIL_WIDTH - BORDER_WIDTH,
       UI_BAR_HEIGHT,
-      windowWidth - detailWidth,
+      windowWidth - DETAIL_WIDTH,
       windowHeight - UI_BAR_HEIGHT
     )
 
     fill(COLORS.dark)
     rect(
-      windowWidth - detailWidth,
+      windowWidth - DETAIL_WIDTH,
       UI_BAR_HEIGHT,
-      detailWidth,
+      DETAIL_WIDTH,
       windowHeight - UI_BAR_HEIGHT
     )
 
     fill(COLORS.primary)
     noStroke()
     textSize(50)
-    text("Details", windowWidth - detailWidth / 2, 90)
+    text("Details", windowWidth - DETAIL_WIDTH / 2, 90)
   }
 
   fill(0)
@@ -184,6 +185,7 @@ function registeredClick(mouseBtn) {
 // PAN AND ZOOM LOGIC
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight)
+  detailPane.position(windowWidth - DETAIL_WIDTH, UI_BAR_HEIGHT + 100)
 }
 
 function mousePressed() {
@@ -381,4 +383,26 @@ function addButton(text, pos, id, disabled, tooltip, onClickFnc, size) {
   btnList.push(btn)
 
   return btn
+}
+
+function createDetailPane() {
+  detailPane = createDiv()
+  detailPane.position(windowWidth - DETAIL_WIDTH, UI_BAR_HEIGHT + 100)
+  let townHeader = createElement("h1", "Town 🔽")
+    .parent(detailPane)
+    .mousePressed(() => toggle(townSection))
+  let townSection = createDiv().parent(detailPane).hide()
+  let townNameInput = createElement("input", "Town Name").parent(townSection)
+
+  let districtHeader = createElement("h1", "District 🔽")
+    .parent(detailPane)
+    .mousePressed(() => toggle(districtSection))
+  let districtSection = createDiv().parent(detailPane).hide()
+
+  let buildingHeader = createElement("h1", "Building 🔽")
+    .parent(detailPane)
+    .mousePressed(() => toggle(buildingSection))
+  let buildingSection = createDiv().parent(detailPane).hide()
+
+  detailPane.hide()
 }

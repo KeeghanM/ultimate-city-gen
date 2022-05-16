@@ -19,3 +19,12 @@ button:hover {
 .active, button:focus, button:active {
     background: #F4A259;
 }
+h1{
+    color:#5B8E7D;
+    font-size: 2rem;
+    margin-top: 1rem;
+}
+h1:hover {
+    color: #F4A259;
+    cursor: pointer;
+}
