@@ -5,6 +5,7 @@ const { Polygon } = require("./Towns/voronoi/polygon")
 const { Town } = require("./Towns/town")
 const { Site } = require("./Towns/voronoi/site")
 const { District } = require("./Towns/district")
+const { Building } = require("./Towns/building")
 const {
   removeClosest,
   pointInPolygon,
@@ -51,6 +52,7 @@ let districtsSaved = false
 
 // Currently Selected Items
 let currentDistrict
+let currentBlock
 let currentBuilding
 
 function preload() {
@@ -93,14 +95,21 @@ function draw() {
   }
 
   if (drawLabels && town.district) {
-    textSize(30)
     fill(COLORS.dark)
     strokeWeight(2)
     stroke(COLORS.light)
     for (let child of town.district.children) {
+      textSize(30)
       let centre =
         child.poly.points.length > 1 ? child.poly.centre() : child.site
       text(child.name, centre.x, centre.y)
+
+      textSize(15)
+      for (let block of child.children) {
+        let blockCentre =
+          block.poly.points.length > 1 ? block.poly.centre() : block.site
+        text(block.name, blockCentre.x, blockCentre.y)
+      }
     }
   }
 
@@ -186,6 +195,34 @@ function registeredClick(mouseBtn) {
     }
   }
 
+  if (mode == "building") {
+    if (mouseBtn === LEFT) {
+      let allClicked = []
+      town.district.findAllClicked(t_mouseX, t_mouseY, allClicked)
+      if (allClicked.length > 1) {
+        let clickedDistrict = allClicked[1]
+        let clickedBlock = allClicked[2]
+
+        let address =
+          clickedBlock.buildings.length +
+          1 +
+          " " +
+          clickedBlock.name +
+          ", " +
+          clickedDistrict.name +
+          ", " +
+          town.name
+        let newBuilding = new Building({
+          type: "house",
+          position: [t_mouseX, t_mouseY],
+
+          address,
+        })
+        clickedBlock.buildings.push(newBuilding)
+      }
+    }
+  }
+
   if (mode == "details") {
     if (
       mouseBtn === LEFT &&
@@ -198,7 +235,12 @@ function registeredClick(mouseBtn) {
         districtNameInput.value(currentDistrict.name)
       }
       if (allClicked.length > 2) {
+        currentBlock = allClicked[2]
+        blockNameInput.value(currentBlock.name)
+      }
+      if (allClicked.length > 3) {
         currentBuilding = allClicked[3]
+        buildingNameInput.value(currentBuilding.name)
       }
     }
   }
@@ -299,6 +341,11 @@ function saveBlocks() {
   }
 
   if (valid) {
+    for (let district of town.district.children) {
+      for (let block of district.children) {
+        block.generateBuildings()
+      }
+    }
     btn_addBuilding.removeAttribute("disabled")
     btn_addBlock.attribute("disabled", "")
     btn_saveBlocks.attribute("disabled", "")
@@ -448,6 +495,8 @@ let townHeader,
   districtHeader,
   districtNameLabel,
   districtNameInput,
+  blockHeader,
+  blockSection,
   buildingHeader,
   buildingSection
 
@@ -455,6 +504,7 @@ function createDetailPane() {
   detailPane = createDiv().id("detail-pane")
   detailPane.position(windowWidth - DETAIL_WIDTH, UI_BAR_HEIGHT + 100)
 
+  // TOWN
   townHeader = createElement("h1", "Town 🔽")
     .parent(detailPane)
     .mousePressed(() => toggleDetailSection(townSection))
@@ -468,6 +518,7 @@ function createDetailPane() {
   )
   townDescription = createElement("textarea").parent(townSection)
 
+  // DISTRICT
   districtHeader = createElement("h1", "District 🔽")
     .parent(detailPane)
     .mousePressed(() => toggleDetailSection(districtSection))
@@ -475,14 +526,24 @@ function createDetailPane() {
     .parent(detailPane)
     .class("detail-section")
     .hide()
-
   districtNameLabel = createElement("label", "District Name:").parent(
     districtSection
   )
   districtNameInput = createInput(currentDistrict?.name, "text")
     .parent(districtSection)
-    .input(() => updateDistrict(currentDistrict))
+    .input(updateDistrict)
 
+  // BLOCK
+  blockHeader = createElement("h1", "Block 🔽")
+    .parent(detailPane)
+    .mousePressed(() => toggleDetailSection(blockSection))
+  blockSection = createDiv().parent(detailPane).class("detail-section").hide()
+  blockNameLabel = createElement("label", "Block Name:").parent(blockSection)
+  blockNameInput = createInput(currentBlock?.name, "text")
+    .parent(blockSection)
+    .input(updateBlock)
+
+  // BUILDING
   buildingHeader = createElement("h1", "Building 🔽")
     .parent(detailPane)
     .mousePressed(() => toggleDetailSection(buildingSection))
@@ -492,8 +553,11 @@ function createDetailPane() {
     .hide()
 }
 
-function updateDistrict(district) {
+function updateDistrict() {
   currentDistrict.name = districtNameInput.value()
+}
+function updateBlock() {
+  currentBlock.name = districtNameInput.value()
 }
 function updateTown() {
   town.name = townNameInput.value()

@@ -104,5 +104,5 @@ exports.GenerateRandomPoint = function GenerateRandomPoint(poly) {
     pointInPoly = pointInPolygon(x, y, poly)
   }
 
-  return { x, y }
+  return pointInPoly ? { x, y } : { x: undefined, y: undefined }
 }

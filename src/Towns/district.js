@@ -5,6 +5,7 @@ const { OffsetPath } = require("./voronoi/offset")
 const Voronoi = require("./voronoi/rhill-voronoi-core.min.js")
 const { pointInPolygon, GenerateRandomPoint } = require("./assets/helpers")
 const { Site } = require("./voronoi/site")
+const { Building } = require("./building")
 
 exports.District = class District {
   constructor(props) {
@@ -12,6 +13,7 @@ exports.District = class District {
     this.poly = props.poly || new Polygon([])
     this.children = []
     this.site = props.site
+    this.buildings = []
 
     this.col = color(160, 82, 45, 60)
     if (props.children) {
@@ -41,6 +43,20 @@ exports.District = class District {
         child.draw(newSize)
       }
     }
+
+    //Draw any buildings
+    strokeWeight(2)
+    fill(COLORS.dark)
+    stroke(COLORS.light)
+    for (let building of this.buildings) {
+      rect(
+        building.position[0],
+        building.position[1],
+        building.size[0],
+        building.size[1]
+      )
+      ellipse(building.position[0], building.position[1], 2)
+    }
   }
 
   findAllClicked(x, y, returnArr) {
@@ -48,6 +64,41 @@ exports.District = class District {
       returnArr.push(this)
       for (let child of this.children) {
         child.findAllClicked(x, y, returnArr)
+      }
+    }
+  }
+
+  generateBuildings() {
+    let buildingCount = 1 // Math.round(this.poly.area()) / 1000
+    let overlapTries = 10
+    for (let i = 0; i < buildingCount; i++) {
+      let valid = false
+      let newBuilding
+      let count = 0
+      while (!valid && count < overlapTries) {
+        count++
+        let point = GenerateRandomPoint(this.poly)
+        if (point.x && point.y) {
+          let size = [
+            Math.round(Math.random() * 8 + 16),
+            Math.round(Math.random() * 8 + 16),
+          ]
+          newBuilding = new Building({
+            type: "house",
+            position: [point.x, point.y],
+            size,
+          })
+          if (this.buildings.length == 0) {
+            valid = true
+          } else {
+            for (let building of this.buildings) {
+              valid = newBuilding.isOverlapping(building)
+            }
+          }
+        }
+      }
+      if (newBuilding && valid) {
+        this.buildings.push(newBuilding)
       }
     }
   }
