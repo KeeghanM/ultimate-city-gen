@@ -101,8 +101,21 @@ exports.GenerateRandomPoint = function GenerateRandomPoint(poly) {
     count++
     x = bbox.xl + Math.random() * (bbox.xr - bbox.xl)
     y = bbox.yt + Math.random() * (bbox.yb - bbox.yt)
-    pointInPoly = pointInPolygon(x, y, poly)
+    pointInPoly = pointInPolygon(x, y, poly.points)
   }
 
   return pointInPoly ? { x, y } : { x: undefined, y: undefined }
+}
+
+exports.OverlappingRects = function OverlappingRects(a, b, margin) {
+  if (
+    a.left >= b.right + margin ||
+    a.top >= b.bottom + margin ||
+    a.right <= b.left - margin ||
+    a.bottom <= b.top - margin
+  ) {
+    return false
+  } else {
+    return true
+  }
 }

@@ -3,7 +3,11 @@ const { GenerateDistrictName } = require("./generators/districtNames")
 const { Polygon } = require("./voronoi/polygon")
 const { OffsetPath } = require("./voronoi/offset")
 const Voronoi = require("./voronoi/rhill-voronoi-core.min.js")
-const { pointInPolygon, GenerateRandomPoint } = require("./assets/helpers")
+const {
+  pointInPolygon,
+  GenerateRandomPoint,
+  OverlappingRects,
+} = require("./assets/helpers")
 const { Site } = require("./voronoi/site")
 const { Building } = require("./building")
 
@@ -69,8 +73,8 @@ exports.District = class District {
   }
 
   generateBuildings() {
-    let buildingCount = 1 // Math.round(this.poly.area()) / 1000
-    let overlapTries = 10
+    let buildingCount = Math.round(this.poly.area()) / 1000
+    let overlapTries = 100
     for (let i = 0; i < buildingCount; i++) {
       let valid = false
       let newBuilding
@@ -92,7 +96,11 @@ exports.District = class District {
             valid = true
           } else {
             for (let building of this.buildings) {
-              valid = newBuilding.isOverlapping(building)
+              valid = !OverlappingRects(
+                building.getBox(),
+                newBuilding.getBox(),
+                5
+              )
             }
           }
         }
