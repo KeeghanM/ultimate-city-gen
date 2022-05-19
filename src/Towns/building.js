@@ -17,4 +17,15 @@ exports.Building = class Bulding {
       left: this.position[0],
     }
   }
+  getPolyPoints() {
+    return [
+      { x: this.position[0], y: this.position[1] },
+      { x: this.position[0] + this.size[0], y: this.position[1] },
+      {
+        x: this.position[0] + this.size[0],
+        y: this.position[1] + this.size[1],
+      },
+      { x: this.position[0], y: this.position[1] + this.size[1] },
+    ]
+  }
 }

@@ -18,6 +18,8 @@ exports.District = class District {
     this.children = []
     this.site = props.site
     this.buildings = []
+    this.type = props.type || "Residential"
+    this.ratio = props.ratio || 0.8
 
     this.col = color(160, 82, 45, 60)
     if (props.children) {
@@ -59,7 +61,6 @@ exports.District = class District {
         building.size[0],
         building.size[1]
       )
-      ellipse(building.position[0], building.position[1], 2)
     }
   }
 
@@ -69,17 +70,24 @@ exports.District = class District {
       for (let child of this.children) {
         child.findAllClicked(x, y, returnArr)
       }
+      for (let building of this.buildings) {
+        if (pointInPolygon(x, y, building.getPolyPoints())) {
+          returnArr.push(building)
+        }
+      }
     }
   }
 
   generateBuildings() {
-    let buildingCount = Math.round(this.poly.area()) / 1000
-    let overlapTries = 100
+    let newBuildingArr = []
+    let buildingCount = Math.round(this.poly.area()) / 2000
+    let overlapTries = 10
     for (let i = 0; i < buildingCount; i++) {
       let valid = false
       let newBuilding
       let count = 0
       while (!valid && count < overlapTries) {
+        valid = false
         count++
         let point = GenerateRandomPoint(this.poly)
         if (point.x && point.y) {
@@ -92,23 +100,24 @@ exports.District = class District {
             position: [point.x, point.y],
             size,
           })
-          if (this.buildings.length == 0) {
+          if (newBuildingArr.length == 0) {
             valid = true
           } else {
-            for (let building of this.buildings) {
+            for (let building of newBuildingArr) {
               valid = !OverlappingRects(
                 building.getBox(),
                 newBuilding.getBox(),
-                5
+                15
               )
             }
           }
         }
       }
       if (newBuilding && valid) {
-        this.buildings.push(newBuilding)
+        newBuildingArr.push(newBuilding)
       }
     }
+    this.buildings = newBuildingArr
   }
 
   calcV(clipSize) {

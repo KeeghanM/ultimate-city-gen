@@ -67,6 +67,7 @@ function setup() {
   createDetailPane()
 
   setMode("hand")
+  scale(0.5)
 }
 
 function draw() {
@@ -104,11 +105,13 @@ function draw() {
         child.poly.points.length > 1 ? child.poly.centre() : child.site
       text(child.name, centre.x, centre.y)
 
-      textSize(15)
-      for (let block of child.children) {
-        let blockCentre =
-          block.poly.points.length > 1 ? block.poly.centre() : block.site
-        text(block.name, blockCentre.x, blockCentre.y)
+      if (child.children.length > 1) {
+        textSize(15)
+        for (let block of child.children) {
+          let blockCentre =
+            block.poly.points.length > 1 ? block.poly.centre() : block.site
+          text(block.name, blockCentre.x, blockCentre.y)
+        }
       }
     }
   }
@@ -341,11 +344,11 @@ function saveBlocks() {
   }
 
   if (valid) {
-    for (let district of town.district.children) {
-      for (let block of district.children) {
-        block.generateBuildings()
-      }
-    }
+    // for (let district of town.district.children) {
+    //   for (let block of district.children) {
+    //     block.generateBuildings()
+    //   }
+    // }
     btn_addBuilding.removeAttribute("disabled")
     btn_addBlock.attribute("disabled", "")
     btn_saveBlocks.attribute("disabled", "")
@@ -495,10 +498,14 @@ let townHeader,
   districtHeader,
   districtNameLabel,
   districtNameInput,
+  districtTypeSelect,
+  districtPrimaryType,
+  districtRegenBtn,
   blockHeader,
   blockSection,
   buildingHeader,
-  buildingSection
+  buildingSection,
+  buildingTypeSelect
 
 function createDetailPane() {
   detailPane = createDiv().id("detail-pane")
@@ -531,7 +538,14 @@ function createDetailPane() {
   )
   districtNameInput = createInput(currentDistrict?.name, "text")
     .parent(districtSection)
-    .input(updateDistrict)
+    .input(() => updateDistrict(false))
+  districtTypeSelect = createSelect().parent(districtSection)
+  districtTypeSelect.option("Residential")
+  districtTypeSelect.option("Business")
+  districtPrimaryType = createSlider(0, 1, 0.8, 0.1).parent(districtSection)
+  districtRegenBtn = createButton("Regenerate")
+    .parent(districtSection)
+    .mousePressed(() => updateDistrict(true))
 
   // BLOCK
   blockHeader = createElement("h1", "Block 🔽")
@@ -553,8 +567,15 @@ function createDetailPane() {
     .hide()
 }
 
-function updateDistrict() {
+function updateDistrict(regen = false) {
   currentDistrict.name = districtNameInput.value()
+  currentDistrict.type = districtTypeSelect.value()
+
+  if (regen) {
+    for (let child of currentDistrict.children) {
+      child.generateBuildings()
+    }
+  }
 }
 function updateBlock() {
   currentBlock.name = districtNameInput.value()
