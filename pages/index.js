@@ -1,4 +1,4 @@
-import Layout from "../components/Layout/layout"
+import Layout from "../components/layout/layout"
 import { useContext } from "react"
 import { UserContext } from "../lib/context"
 
