@@ -11,6 +11,8 @@ function setup() {
 }
 
 function draw() {
+  rectMode(CORNER)
+
   noStroke()
   background(87, 67, 50) // Dirt Colour
 
@@ -29,14 +31,15 @@ function draw() {
     building.draw()
   }
 
+  rectMode(CENTER)
   if (current_status == "draw_roads") {
     let t_mouseX = (mouseX - transformX) / currentScale
     let t_mouseY = (mouseY - transformY) / currentScale
     fill("rgba(255,255,255, 0.25)")
     rect(
-      Math.floor(t_mouseX / cell_size) * cell_size,
-      Math.floor(t_mouseY / cell_size) * cell_size,
-      cell_size
+      Math.floor(t_mouseX / cell_size) * cell_size + cell_size / 2,
+      Math.floor(t_mouseY / cell_size) * cell_size + cell_size / 2,
+      cell_size * road_add_size
     )
   }
   pop()

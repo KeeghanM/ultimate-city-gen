@@ -13,6 +13,7 @@ function generateRoads() {
   mined_cell_count = 0
   grid = []
   miners = []
+  buildings = []
 
   // Create four miners in the cardinal directions
   miners.push({ x: grid_width / 2, y: grid_height / 2, direction: 0 })
@@ -71,4 +72,12 @@ function generateRoads() {
       if (miner.dir == 3) clamp(miner.x--, 0, grid_width)
     }
   }
+}
+
+function changeRoadAddSize(event) {
+    if (event.deltaY < 0) {
+      road_add_size = clamp(road_add_size+1,1,3)
+    } else {
+      road_add_size = clamp(road_add_size-1,1,3)
+    }
 }
