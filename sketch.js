@@ -1,4 +1,5 @@
 function setup() {
+  textAlign(CENTER, CENTER)
   createCanvas(windowWidth, windowHeight)
   scale(0.5)
 
@@ -18,6 +19,10 @@ function setup() {
   size_slider = createSlider(100, 350, 150, 10)
   size_slider.position(130, 5)
   size_slider.style("width", "80px")
+
+  town_name = createInput("")
+  town_name.position(windowWidth / 2 - 100, 0)
+  town_name.addClass("townNameInput")
 }
 
 function draw() {
@@ -39,6 +44,10 @@ function draw() {
     building.draw()
   }
   pop()
+
+  // DRAW UI ON TOP
+  fill("#0B0B45")
+  rect(0, 0, windowWidth, 100)
 }
 
 function registeredClick(mouse_button) {
@@ -61,8 +70,7 @@ function cleanGrid() {
 }
 
 function runGenerator() {
-  town_name = GenerateTownName()
-  console.log(town_name)
+  town_name.value(GenerateTownName())
   grid_width = size_slider.value()
   grid_height = grid_width
   min_road_x = grid_width
