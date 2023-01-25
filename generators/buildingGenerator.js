@@ -6,6 +6,7 @@ const MAX_TAVERNS = Math.max(Math.floor(MAX_MINED / 150), 1)
 let tavern_count
 
 function generateBuildings() {
+  current_status = "add_buildings"
   tavern_count = 0
   buildings = []
   while (building_check_x < grid_width && building_check_y < grid_height) {
