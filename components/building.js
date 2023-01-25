@@ -11,7 +11,7 @@ const ROOF_COLORS = [
 
 class Building {
   constructor(cell) {
-    this.cells = [{ x: cell.x, y: cell.y }]
+    if (cell) this.cells = [{ x: cell.x, y: cell.y }]
     this.type = ""
     this.points = []
     this.corners = []
