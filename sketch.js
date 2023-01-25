@@ -6,21 +6,7 @@ function setup() {
   cell_size = 8
   grid_offset = (cell_size * grid_width - width) / 2
 
-  generate_button = createButton("Generate Town")
-  generate_button.mousePressed(runGenerator)
-  generate_button.style("width", "120px")
-
-  save_button = createButton("Save Town")
-  save_button.mousePressed(saveToJson)
-  save_button.style("width", "120px")
-
-  size_slider = createSlider(100, 350, 150, 10)
-  size_slider.style("width", "80px")
-
-  town_name = createInput("")
-  town_name.addClass("townNameInput")
-
-  town_load = createFileInput(loadFromJson)
+  createUiElements()
   setUiPositions()
 }
 
@@ -53,13 +39,16 @@ function registeredClick(mouse_button) {
   let t_mouseX = (mouseX - transformX) / currentScale
   let t_mouseY = (mouseY - transformY) / currentScale
 
-  selected_building = undefined
+  if (current_status == "draw_roads") {
+  } else {
+    selected_building = undefined
 
-  for (let building of buildings) {
-    building.selected = false
-    if (pointInPolygon(t_mouseX, t_mouseY, building.points)) {
-      // building.selected = true
-      selected_building = building
+    for (let building of buildings) {
+      building.selected = false
+      if (pointInPolygon(t_mouseX, t_mouseY, building.points)) {
+        // building.selected = true
+        selected_building = building
+      }
     }
   }
 }
@@ -68,34 +57,14 @@ function cleanGrid() {
   grid = grid.filter((cell) => cell.type !== "dirt")
 }
 
-function runGenerator() {
+function newCity() {
   town_name.value(GenerateTownName())
   grid_width = size_slider.value()
   grid_height = grid_width
   min_road_x = grid_width
   min_road_y = grid_height
 
-  grid = []
-  buildings = []
-  miners = []
-
-  // Create four miners in the cardinal directions
-  miners.push({ x: grid_width / 2, y: grid_height / 2, direction: 0 })
-  miners.push({ x: grid_width / 2, y: grid_height / 2, direction: 1 })
-  miners.push({ x: grid_width / 2, y: grid_height / 2, direction: 2 })
-  miners.push({ x: grid_width / 2, y: grid_height / 2, direction: 3 })
-
-  // Fill the grid with dirt initially
-  for (let x = 0; x < grid_width; x++) {
-    for (let y = 0; y < grid_height; y++) {
-      grid.push({ x, y, type: "dirt" })
-    }
-  }
-
   generateRoads()
-  generateBuildings()
-
-  cleanGrid()
 }
 
 function saveToJson() {
@@ -114,6 +83,7 @@ function loadFromJson(file) {
     if (loaded_town.buildings && loaded_town.grid && loaded_town.name) {
       grid = loaded_town.grid
       town_name.value(loaded_town.name)
+      buildings = []
 
       // Need to reconstruct the building objects to get access to their funcitons
       for (let loaded_building of loaded_town.buildings) {
@@ -126,13 +96,47 @@ function loadFromJson(file) {
         buildings.push(new_building)
       }
     }
+  } else {
+    console.log("Wrong type")
   }
 }
 
+function createUiElements() {
+  btn_generate_roads = createButton("🆕")
+  btn_generate_roads.mousePressed(newCity)
+
+  btn_draw_roads = createButton("🚧")
+  btn_draw_roads.mousePressed(() => (current_status = "draw_roads"))
+
+  btn_generate_buildings = createButton("🏠")
+  btn_generate_buildings.mousePressed(generateBuildings)
+
+  btn_save = createButton("💾")
+  btn_save.mousePressed(saveToJson)
+
+  size_slider = createSlider(100, 350, 150, 10)
+  size_slider.style("width", "100px")
+
+  town_name = createInput("")
+  town_name.addClass("townNameInput")
+
+  btn_load = createFileInput(loadFromJson)
+  label_load = createElement("label", "📂")
+  label_load.child(btn_load)
+}
+
 function setUiPositions() {
+  // Left side
+  btn_generate_roads.position(0, 0)
+  size_slider.position(0, 80)
+  btn_draw_roads.position(100, 0)
+  btn_generate_buildings.position(200, 0)
+
+  // Middle
   town_name.position(windowWidth / 2 - 100, 0)
-  generate_button.position(5, 5)
-  size_slider.position(130, 5)
-  save_button.position(5, 30)
-  town_load.position(5, 55)
+
+  // Right side
+  label_load.position(windowWidth - 100, 0)
+  //   label_load
+  btn_save.position(windowWidth - 200, 0)
 }

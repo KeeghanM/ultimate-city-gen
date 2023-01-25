@@ -231,4 +231,6 @@ function generateBuildings() {
       buildings.push(building)
     }
   }
+
+  cleanGrid() // TODO: Move to last step
 }

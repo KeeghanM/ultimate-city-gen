@@ -11,6 +11,22 @@ let mined_cell_count
 function generateRoads() {
   MAX_MINED = (grid_width * grid_height) / 32
   mined_cell_count = 0
+  grid = []
+  miners = []
+
+  // Create four miners in the cardinal directions
+  miners.push({ x: grid_width / 2, y: grid_height / 2, direction: 0 })
+  miners.push({ x: grid_width / 2, y: grid_height / 2, direction: 1 })
+  miners.push({ x: grid_width / 2, y: grid_height / 2, direction: 2 })
+  miners.push({ x: grid_width / 2, y: grid_height / 2, direction: 3 })
+
+  // Fill the grid with dirt initially
+  for (let x = 0; x < grid_width; x++) {
+    for (let y = 0; y < grid_height; y++) {
+      grid.push({ x, y, type: "dirt" })
+    }
+  }
+  
   while (miners.length > 0 && mined_cell_count < MAX_MINED) {
     for (let miner of miners) {
       if (mined_cell_count >= MAX_MINED) {
