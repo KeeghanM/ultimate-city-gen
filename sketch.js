@@ -7,22 +7,19 @@ function setup() {
   grid_offset = (cell_size * grid_width - width) / 2
 
   generate_button = createButton("Generate Town")
-  generate_button.position(5, 5)
   generate_button.mousePressed(runGenerator)
   generate_button.style("width", "120px")
 
   save_button = createButton("Save Town")
-  save_button.position(5, 30)
   save_button.mousePressed(saveToJson)
   save_button.style("width", "120px")
 
   size_slider = createSlider(100, 350, 150, 10)
-  size_slider.position(130, 5)
   size_slider.style("width", "80px")
 
   town_name = createInput("")
-  town_name.position(windowWidth / 2 - 100, 0)
   town_name.addClass("townNameInput")
+  setUiPositions()
 }
 
 function draw() {
@@ -106,4 +103,11 @@ function saveToJson() {
   }
 
   download(JSON.stringify(town), "TownName.json", "text/plain")
+}
+
+function setUiPositions() {
+  town_name.position(windowWidth / 2 - 100, 0)
+  size_slider.position(130, 5)
+  generate_button.position(5, 5)
+  save_button.position(5, 30)
 }
