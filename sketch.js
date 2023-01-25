@@ -35,11 +35,14 @@ function draw() {
   if (current_status == "draw_roads") {
     let t_mouseX = (mouseX - transformX) / currentScale
     let t_mouseY = (mouseY - transformY) / currentScale
-    fill("rgba(255,255,255, 0.25)")
+
+    fill("rgba(255,255,255, 0.25)") // ROAD GREY
+    if (keyIsDown(SHIFT)) fill("rgba(255, 145, 0, 0.25)") // DIRT BROWN
+
     rect(
       Math.floor(t_mouseX / cell_size) * cell_size + cell_size / 2,
       Math.floor(t_mouseY / cell_size) * cell_size + cell_size / 2,
-      cell_size * road_add_size
+      cell_size + road_add_size * 2 * cell_size
     )
   }
   pop()
@@ -54,18 +57,7 @@ function registeredClick(mouse_button) {
   let t_mouseY = (mouseY - transformY) / currentScale
 
   if (current_status == "draw_roads") {
-    let grid_x = Math.floor(t_mouseX / cell_size)
-    let grid_y = Math.floor(t_mouseY / cell_size)
-
-    let index = indexFromXY(grid_x, grid_y)
-
-    if (grid[index].type == "road") {
-      grid[index].type = "dirt"
-    } else {
-      grid[index].type = "road"
-      grid[index].color =
-        ROAD_COLORS[Math.floor(Math.random() * ROAD_COLORS.length)]
-    }
+    drawRoad(t_mouseX, t_mouseY)
   } else {
     selected_building = undefined
 

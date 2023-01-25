@@ -27,7 +27,7 @@ function generateRoads() {
       grid.push({ x, y, type: "dirt" })
     }
   }
-  
+
   while (miners.length > 0 && mined_cell_count < MAX_MINED) {
     for (let miner of miners) {
       if (mined_cell_count >= MAX_MINED) {
@@ -41,7 +41,8 @@ function generateRoads() {
 
       if (grid[indexFromXY(x_to_check, y_to_check)].type == "dirt") {
         grid[indexFromXY(x_to_check, y_to_check)].type = "road"
-        grid[indexFromXY(x_to_check, y_to_check)].color = ROAD_COLORS[Math.floor(Math.random() * ROAD_COLORS.length)]
+        grid[indexFromXY(x_to_check, y_to_check)].color =
+          ROAD_COLORS[Math.floor(Math.random() * ROAD_COLORS.length)]
         mined_cell_count++
 
         if (x_to_check < min_road_x) min_road_x = x_to_check
@@ -75,9 +76,53 @@ function generateRoads() {
 }
 
 function changeRoadAddSize(event) {
-    if (event.deltaY < 0) {
-      road_add_size = clamp(road_add_size+1,1,3)
+  if (event.deltaY < 0) {
+    road_add_size = clamp(road_add_size + 1, 0, 2)
+  } else {
+    road_add_size = clamp(road_add_size - 1, 0, 2)
+  }
+}
+
+function drawRoad(t_mouseX, t_mouseY) {
+  let grid_x = Math.floor(t_mouseX / cell_size)
+  let grid_y = Math.floor(t_mouseY / cell_size)
+
+  let cells_to_update = []
+  cells_to_update.push(grid[indexFromXY(grid_x, grid_y)])
+  if (road_add_size >= 1) {
+    cells_to_update.push(grid[indexFromXY(grid_x - 1, grid_y - 1)])
+    cells_to_update.push(grid[indexFromXY(grid_x, grid_y - 1)])
+    cells_to_update.push(grid[indexFromXY(grid_x + 1, grid_y - 1)])
+    cells_to_update.push(grid[indexFromXY(grid_x + 1, grid_y)])
+    cells_to_update.push(grid[indexFromXY(grid_x + 1, grid_y + 1)])
+    cells_to_update.push(grid[indexFromXY(grid_x, grid_y + 1)])
+    cells_to_update.push(grid[indexFromXY(grid_x - 1, grid_y + 1)])
+    cells_to_update.push(grid[indexFromXY(grid_x - 1, grid_y)])
+  }
+  if (road_add_size == 2) {
+    cells_to_update.push(grid[indexFromXY(grid_x - 2, grid_y - 2)])
+    cells_to_update.push(grid[indexFromXY(grid_x - 1, grid_y - 2)])
+    cells_to_update.push(grid[indexFromXY(grid_x, grid_y - 2)])
+    cells_to_update.push(grid[indexFromXY(grid_x + 1, grid_y - 2)])
+    cells_to_update.push(grid[indexFromXY(grid_x + 2, grid_y - 2)])
+    cells_to_update.push(grid[indexFromXY(grid_x + 2, grid_y - 1)])
+    cells_to_update.push(grid[indexFromXY(grid_x + 2, grid_y)])
+    cells_to_update.push(grid[indexFromXY(grid_x + 2, grid_y + 1)])
+    cells_to_update.push(grid[indexFromXY(grid_x + 2, grid_y + 2)])
+    cells_to_update.push(grid[indexFromXY(grid_x + 1, grid_y + 2)])
+    cells_to_update.push(grid[indexFromXY(grid_x, grid_y + 2)])
+    cells_to_update.push(grid[indexFromXY(grid_x - 1, grid_y + 2)])
+    cells_to_update.push(grid[indexFromXY(grid_x - 2, grid_y + 2)])
+    cells_to_update.push(grid[indexFromXY(grid_x - 2, grid_y + 1)])
+    cells_to_update.push(grid[indexFromXY(grid_x - 2, grid_y)])
+    cells_to_update.push(grid[indexFromXY(grid_x - 2, grid_y - 1)])
+  }
+  for (let cell of cells_to_update) {
+    if (keyIsDown(SHIFT)) {
+      cell.type = "dirt"
     } else {
-      road_add_size = clamp(road_add_size-1,1,3)
+      cell.type = "road"
+      cell.color = ROAD_COLORS[Math.floor(Math.random() * ROAD_COLORS.length)]
     }
+  }
 }
