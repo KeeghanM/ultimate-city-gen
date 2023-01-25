@@ -38,7 +38,6 @@ function draw() {
   for (let building of buildings) {
     building.draw()
   }
-
   pop()
 }
 
@@ -62,6 +61,8 @@ function cleanGrid() {
 }
 
 function runGenerator() {
+  town_name = GenerateTownName()
+  console.log(town_name)
   grid_width = size_slider.value()
   grid_height = grid_width
   min_road_x = grid_width
