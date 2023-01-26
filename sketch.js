@@ -86,6 +86,11 @@ function newCity() {
   btn_draw_roads.removeAttribute("disabled", "")
   btn_generate_city.removeClass("click_me")
   btn_generate_buildings.removeAttribute("disabled", "")
+  btn_confirm_city.attribute("disabled", "")
+
+  btn_draw_roads.show()
+  btn_generate_buildings.show()
+  btn_confirm_city.show()
 
   town_name.value(GenerateTownName())
   grid_width = size_slider.value()
@@ -98,9 +103,16 @@ function newCity() {
 
 function confirmCity() {
   cleanGrid()
+  current_status = "city_finished"
+
   btn_draw_roads.hide()
   btn_generate_buildings.hide()
   btn_confirm_city.hide()
+
+  btn_draw_roads.removeClass("click_me")
+  btn_generate_buildings.removeClass("click_me")
+  btn_confirm_city.removeClass("click_me")
+  btn_generate_city.removeClass("click_me")
 }
 
 function createUiElements() {
