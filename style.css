@@ -1,7 +1,35 @@
+
 html,
 body {
     margin: 0;
     padding: 0;
+    overflow: hidden;
+}
+
+.mobile_overlay {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    z-index: 100;
+    background-color: var(--color_dark);
+    color: var(--color_light);
+    font-size: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'MedievalSharp', cursive;
+    flex-direction: column;
+}
+.mobile_overlay > p {
+    padding-inline: 5rem;
+}
+
+
+@media(min-width: 1000px){
+.mobile_overlay {
+    display: none;
+    width: 0;
+    height: 0;
 }
 
 canvas {
@@ -81,4 +109,5 @@ input[type="file"] {
     100% {
         background-color: var(--color_success);
     }
+}
 }
