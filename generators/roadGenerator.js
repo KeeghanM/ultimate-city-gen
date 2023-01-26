@@ -15,6 +15,8 @@ function generateRoads() {
   miners = []
   buildings = []
 
+  btn_draw_roads.addClass("click_me")
+
   // Create four miners in the cardinal directions
   miners.push({ x: grid_width / 2, y: grid_height / 2, direction: 0 })
   miners.push({ x: grid_width / 2, y: grid_height / 2, direction: 1 })
@@ -84,6 +86,9 @@ function changeRoadAddSize(event) {
 }
 
 function drawRoad(t_mouseX, t_mouseY) {
+  btn_generate_buildings.removeAttribute("disabled", "")
+  btn_generate_buildings.addClass("click_me")
+
   let grid_x = Math.floor(t_mouseX / cell_size)
   let grid_y = Math.floor(t_mouseY / cell_size)
 

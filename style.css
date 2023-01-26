@@ -37,6 +37,7 @@ input[type="file"] {
     border: none;
     outline: none;
     color: var(--color_light);
+    font-family: 'MedievalSharp', cursive;
 }
 
 .header_container {
@@ -60,4 +61,24 @@ input[type="file"] {
 .size_slider {
     position: absolute;
     bottom: 0;
+}
+
+.click_me {
+    background-color: var(--color_success);
+    animation-name: animate_click_me;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+}
+@keyframes animate_click_me {
+    0% {
+        background-color: var(--color_success);
+    }
+
+    50% {
+        background-color: rgba(0,0,0,0);
+    }
+
+    100 {
+        background-color: var(--color_success);
+    }
 }

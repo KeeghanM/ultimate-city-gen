@@ -84,6 +84,7 @@ function cleanGrid() {
 
 function newCity() {
   btn_draw_roads.removeAttribute("disabled", "")
+  btn_generate_city.removeClass("click_me")
 
   town_name.value(GenerateTownName())
   grid_width = size_slider.value()
@@ -140,6 +141,7 @@ function createUiElements() {
   new_city_container.addClass("new_city_button")
   btn_generate_city = createButton("🆕")
   btn_generate_city.mousePressed(newCity)
+  btn_generate_city.addClass("click_me")
 
   size_slider = createSlider(100, 350, 150, 10)
   size_slider.style("width", "95px")
@@ -149,7 +151,10 @@ function createUiElements() {
   new_city_container.child(size_slider)
 
   btn_draw_roads = createButton("🚧")
-  btn_draw_roads.mousePressed(() => (current_status = "draw_roads"))
+  btn_draw_roads.mousePressed(() => {
+    current_status = "draw_roads"
+    btn_draw_roads.removeClass("click_me")
+  })
 
   btn_generate_buildings = createButton("🏠")
   btn_generate_buildings.mousePressed(generateBuildings)
@@ -178,4 +183,7 @@ function createUiElements() {
   header_container.child(left_items)
   header_container.child(town_name)
   header_container.child(right_items)
+
+  btn_draw_roads.attribute("disabled", "")
+  btn_generate_buildings.attribute("disabled", "")
 }
