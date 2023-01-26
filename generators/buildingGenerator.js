@@ -7,6 +7,10 @@ let tavern_count
 
 function generateBuildings() {
   current_status = "add_buildings"
+  btn_draw_roads.attribute("disabled", "")
+  btn_generate_buildings.attribute("disabled", "")
+  btn_generate_buildings.removeClass("click_me")
+
   tavern_count = 0
   buildings = []
   while (building_check_x < grid_width && building_check_y < grid_height) {
