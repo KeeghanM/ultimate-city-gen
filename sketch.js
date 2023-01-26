@@ -1,7 +1,6 @@
 function setup() {
   textAlign(CENTER, CENTER)
   createCanvas(windowWidth, windowHeight)
-  scale(0.5)
 
   cell_size = 8
   grid_offset = (cell_size * grid_width - width) / 2
@@ -13,6 +12,10 @@ function setup() {
 let debug = ""
 
 function draw() {
+  if (windowWidth < 1000) {
+    background(color_dark)
+    return
+  }
   rectMode(CORNER)
 
   noStroke()
