@@ -8,7 +8,10 @@ function setup() {
 
   createUiElements()
   setUiPositions()
+  noLoop()
 }
+
+let debug = ""
 
 function draw() {
   rectMode(CORNER)
@@ -50,6 +53,11 @@ function draw() {
   // DRAW UI ON TOP
   fill("#0B0B45")
   rect(0, 0, windowWidth, 100)
+
+  // DEBUG TEXT
+  //   textSize(32)
+  //   fill(255)
+  //   text(debug, 50, 150)
 }
 
 function registeredClick(mouse_button) {
