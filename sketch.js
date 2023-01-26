@@ -83,6 +83,23 @@ function cleanGrid() {
 }
 
 function newCity() {
+  cuteAlert({
+    type: "question",
+    title: "Are you sure?",
+    message:
+      "Doing this will remove your entire city. Be sure to save before committing to this!",
+    confirmText: "Go!",
+    cancelText: "Cancel",
+  }).then((e) => {
+    if (e == "confirm") {
+      generateCity()
+    } else {
+      // nothing
+    }
+  })
+}
+
+function generateCity() {
   btn_draw_roads.removeAttribute("disabled", "")
   btn_generate_city.removeClass("click_me")
   btn_generate_buildings.removeAttribute("disabled", "")
