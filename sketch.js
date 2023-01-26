@@ -7,7 +7,6 @@ function setup() {
   grid_offset = (cell_size * grid_width - width) / 2
 
   createUiElements()
-  setUiPositions()
   noLoop()
 }
 
@@ -17,7 +16,7 @@ function draw() {
   rectMode(CORNER)
 
   noStroke()
-  background(87, 67, 50) // Dirt Colour
+  background(color_parchment) // Dirt Colour
 
   push()
   translate(transformX, transformY)
@@ -51,7 +50,7 @@ function draw() {
   pop()
 
   // DRAW UI ON TOP
-  fill("#0B0B45")
+  fill(color_dark)
   rect(0, 0, windowWidth, 100)
 
   // DEBUG TEXT
@@ -84,6 +83,8 @@ function cleanGrid() {
 }
 
 function newCity() {
+  btn_draw_roads.removeAttribute("disabled", "")
+
   town_name.value(GenerateTownName())
   grid_width = size_slider.value()
   grid_height = grid_width
@@ -128,8 +129,24 @@ function loadFromJson(file) {
 }
 
 function createUiElements() {
-  btn_generate_roads = createButton("🆕")
-  btn_generate_roads.mousePressed(newCity)
+  header_container = createElement("div")
+  header_container.addClass("header_container")
+  header_container.position(0, 0)
+
+  left_items = createElement("div")
+  left_items.addClass("side_items")
+
+  new_city_container = createElement("div")
+  new_city_container.addClass("new_city_button")
+  btn_generate_city = createButton("🆕")
+  btn_generate_city.mousePressed(newCity)
+
+  size_slider = createSlider(100, 350, 150, 10)
+  size_slider.style("width", "95px")
+  size_slider.addClass("size_slider")
+
+  new_city_container.child(btn_generate_city)
+  new_city_container.child(size_slider)
 
   btn_draw_roads = createButton("🚧")
   btn_draw_roads.mousePressed(() => (current_status = "draw_roads"))
@@ -137,32 +154,28 @@ function createUiElements() {
   btn_generate_buildings = createButton("🏠")
   btn_generate_buildings.mousePressed(generateBuildings)
 
-  btn_save = createButton("💾")
-  btn_save.mousePressed(saveToJson)
-
-  size_slider = createSlider(100, 350, 150, 10)
-  size_slider.style("width", "100px")
+  left_items.child(new_city_container)
+  left_items.child(btn_draw_roads)
+  left_items.child(btn_generate_buildings)
 
   town_name = createInput("")
   town_name.addClass("townNameInput")
+  town_name.value("Generate your town...")
+
+  right_items = createElement("div")
+  right_items.addClass("side_items")
+
+  btn_save = createButton("💾")
+  btn_save.mousePressed(saveToJson)
 
   btn_load = createFileInput(loadFromJson)
   label_load = createElement("label", "📂")
   label_load.child(btn_load)
-}
 
-function setUiPositions() {
-  // Left side
-  btn_generate_roads.position(0, 0)
-  size_slider.position(0, 80)
-  btn_draw_roads.position(100, 0)
-  btn_generate_buildings.position(200, 0)
+  right_items.child(btn_save)
+  right_items.child(label_load)
 
-  // Middle
-  town_name.position(windowWidth / 2 - 100, 0)
-
-  // Right side
-  label_load.position(windowWidth - 100, 0)
-  //   label_load
-  btn_save.position(windowWidth - 200, 0)
+  header_container.child(left_items)
+  header_container.child(town_name)
+  header_container.child(right_items)
 }

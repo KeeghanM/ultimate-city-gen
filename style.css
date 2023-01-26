@@ -19,20 +19,45 @@ button,label {
     justify-content: center;
     align-items: center;
 }
-button:hover,label:hover {
+button:hover:enabled,label:hover {
     cursor: pointer;
-    background-color: rgba(255,255,255,0.1);
+    background-color: var(--color_accent_light);
+}
+button:active:enabled, label:active{
+    background-color: var(--color_accent_dark);
 }
 input[type="file"] {
     display: none;
 }
 
 .townNameInput {
-    font-size: 2rem;
-    width: 400px;
+    font-size: 3rem;
     height: 100px;
     background: none;
     border: none;
     outline: none;
-    color: #fff;
+    color: var(--color_light);
+}
+
+.header_container {
+    width: 100vw;
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+}
+
+.side_items {display: flex;
+    flex-direction: row;
+    margin-inline: 2rem;
+}
+
+.new_city_button {
+    position: relative;
+}
+
+.size_slider {
+    position: absolute;
+    bottom: 0;
 }
