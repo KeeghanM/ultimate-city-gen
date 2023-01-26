@@ -79,13 +79,13 @@ function registeredClick(mouse_button) {
 }
 
 function cleanGrid() {
-  //TODO: CALL ME AT SOME POINT
   grid = grid.filter((cell) => cell.type !== "dirt")
 }
 
 function newCity() {
   btn_draw_roads.removeAttribute("disabled", "")
   btn_generate_city.removeClass("click_me")
+  btn_generate_buildings.removeAttribute("disabled", "")
 
   town_name.value(GenerateTownName())
   grid_width = size_slider.value()
@@ -94,6 +94,13 @@ function newCity() {
   min_road_y = grid_height
 
   generateRoads()
+}
+
+function confirmCity() {
+  cleanGrid()
+  btn_draw_roads.hide()
+  btn_generate_buildings.hide()
+  btn_confirm_city.hide()
 }
 
 function createUiElements() {
@@ -126,9 +133,14 @@ function createUiElements() {
   btn_generate_buildings = createButton("🏠")
   btn_generate_buildings.mousePressed(generateBuildings)
 
+  btn_confirm_city = createButton("✅")
+  btn_confirm_city.mousePressed(confirmCity)
+  btn_confirm_city.attribute("disabled", "")
+
   left_items.child(new_city_container)
   left_items.child(btn_draw_roads)
   left_items.child(btn_generate_buildings)
+  left_items.child(btn_confirm_city)
 
   town_name = createInput("")
   town_name.addClass("townNameInput")

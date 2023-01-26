@@ -236,6 +236,9 @@ function generateBuildings() {
   }
 
   btn_draw_roads.attribute("disabled", "")
+  btn_confirm_city.removeAttribute("disabled", "")
   btn_generate_buildings.removeClass("click_me")
+  btn_draw_roads.removeClass("click_me") // Just in case
+
   current_status = "city_finished"
 }
