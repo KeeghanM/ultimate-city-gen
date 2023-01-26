@@ -6,13 +6,11 @@ const MAX_TAVERNS = Math.max(Math.floor(MAX_MINED / 150), 1)
 let tavern_count
 
 function generateBuildings() {
-  current_status = "add_buildings"
-  btn_draw_roads.attribute("disabled", "")
-  btn_generate_buildings.attribute("disabled", "")
-  btn_generate_buildings.removeClass("click_me")
-
   tavern_count = 0
   buildings = []
+  building_check_x = min_road_x
+  building_check_y = min_road_y
+
   while (building_check_x < grid_width && building_check_y < grid_height) {
     let cell = grid[indexFromXY(building_check_x, building_check_y)]
 
@@ -237,5 +235,10 @@ function generateBuildings() {
     }
   }
 
-  cleanGrid() // TODO: Move to last step
+  btn_draw_roads.attribute("disabled", "")
+  btn_confirm_city.removeAttribute("disabled", "")
+  btn_generate_buildings.removeClass("click_me")
+  btn_draw_roads.removeClass("click_me") // Just in case
+
+  current_status = "city_finished"
 }

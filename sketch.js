@@ -85,6 +85,12 @@ function cleanGrid() {
 function newCity() {
   btn_draw_roads.removeAttribute("disabled", "")
   btn_generate_city.removeClass("click_me")
+  btn_generate_buildings.removeAttribute("disabled", "")
+  btn_confirm_city.attribute("disabled", "")
+
+  btn_draw_roads.show()
+  btn_generate_buildings.show()
+  btn_confirm_city.show()
 
   town_name.value(GenerateTownName())
   grid_width = size_slider.value()
@@ -95,38 +101,18 @@ function newCity() {
   generateRoads()
 }
 
-function saveToJson() {
-  let town = {
-    grid,
-    buildings,
-    name: town_name.value(),
-  }
+function confirmCity() {
+  cleanGrid()
+  current_status = "city_finished"
 
-  download(JSON.stringify(town), town_name.value() + ".json", "text/plain")
-}
+  btn_draw_roads.hide()
+  btn_generate_buildings.hide()
+  btn_confirm_city.hide()
 
-function loadFromJson(file) {
-  if (file.subtype === "json") {
-    let loaded_town = file.data
-    if (loaded_town.buildings && loaded_town.grid && loaded_town.name) {
-      grid = loaded_town.grid
-      town_name.value(loaded_town.name)
-      buildings = []
-
-      // Need to reconstruct the building objects to get access to their funcitons
-      for (let loaded_building of loaded_town.buildings) {
-        let new_building = new Building()
-        new_building.type = loaded_building.type
-        new_building.points = loaded_building.points
-        new_building.roof_lines = loaded_building.roof_lines
-        new_building.roof_points = loaded_building.roof_points
-        new_building.color = loaded_building.color
-        buildings.push(new_building)
-      }
-    }
-  } else {
-    console.log("Wrong type")
-  }
+  btn_draw_roads.removeClass("click_me")
+  btn_generate_buildings.removeClass("click_me")
+  btn_confirm_city.removeClass("click_me")
+  btn_generate_city.removeClass("click_me")
 }
 
 function createUiElements() {
@@ -159,9 +145,14 @@ function createUiElements() {
   btn_generate_buildings = createButton("🏠")
   btn_generate_buildings.mousePressed(generateBuildings)
 
+  btn_confirm_city = createButton("✅")
+  btn_confirm_city.mousePressed(confirmCity)
+  btn_confirm_city.attribute("disabled", "")
+
   left_items.child(new_city_container)
   left_items.child(btn_draw_roads)
   left_items.child(btn_generate_buildings)
+  left_items.child(btn_confirm_city)
 
   town_name = createInput("")
   town_name.addClass("townNameInput")
