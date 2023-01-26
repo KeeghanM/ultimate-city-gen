@@ -111,6 +111,7 @@ function generateCity() {
   btn_draw_roads.show()
   btn_generate_buildings.show()
   btn_confirm_city.show()
+  btn_detail_tray.hide()
 
   town_name.value(GenerateTownName())
   grid_width = size_slider.value()
@@ -128,6 +129,7 @@ function confirmCity() {
   btn_draw_roads.hide()
   btn_generate_buildings.hide()
   btn_confirm_city.hide()
+  btn_detail_tray.show()
 
   btn_draw_roads.removeClass("click_me")
   btn_generate_buildings.removeClass("click_me")
@@ -169,10 +171,15 @@ function createUiElements() {
   btn_confirm_city.mousePressed(confirmCity)
   btn_confirm_city.attribute("disabled", "")
 
+  btn_detail_tray = createButton("📜")
+  btn_detail_tray.mousePressed(() => (detail_tray_open = !detail_tray_open))
+  btn_detail_tray.hide()
+
   left_items.child(new_city_container)
   left_items.child(btn_draw_roads)
   left_items.child(btn_generate_buildings)
   left_items.child(btn_confirm_city)
+  left_items.child(btn_detail_tray)
 
   town_name = createInput("")
   town_name.addClass("townNameInput")
