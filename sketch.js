@@ -79,6 +79,7 @@ function registeredClick(mouse_button) {
 }
 
 function cleanGrid() {
+  //TODO: CALL ME AT SOME POINT
   grid = grid.filter((cell) => cell.type !== "dirt")
 }
 
@@ -123,13 +124,7 @@ function createUiElements() {
   })
 
   btn_generate_buildings = createButton("🏠")
-  btn_generate_buildings.mousePressed(() => {
-    current_status = "building_buildings"
-    generateBuildings()
-
-    btn_draw_roads.attribute("disabled", "")
-    btn_generate_buildings.removeClass("click_me")
-  })
+  btn_generate_buildings.mousePressed(generateBuildings)
 
   left_items.child(new_city_container)
   left_items.child(btn_draw_roads)

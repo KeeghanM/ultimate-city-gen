@@ -8,6 +8,9 @@ let tavern_count
 function generateBuildings() {
   tavern_count = 0
   buildings = []
+  building_check_x = min_road_x
+  building_check_y = min_road_y
+
   while (building_check_x < grid_width && building_check_y < grid_height) {
     let cell = grid[indexFromXY(building_check_x, building_check_y)]
 
@@ -232,7 +235,7 @@ function generateBuildings() {
     }
   }
 
-  cleanGrid() // TODO: Move to last step
-
+  btn_draw_roads.attribute("disabled", "")
+  btn_generate_buildings.removeClass("click_me")
   current_status = "city_finished"
 }
