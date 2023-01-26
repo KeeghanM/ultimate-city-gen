@@ -53,6 +53,15 @@ function draw() {
   pop()
 
   // DRAW UI ON TOP
+  if (detail_tray_open) {
+    UI_BAR_HEIGHT = 150
+    fill(color_light)
+    rect(0, 100, windowWidth, 50)
+  } else {
+    UI_BAR_HEIGHT = 100
+  }
+
+  // main UI bar
   fill(color_dark)
   rect(0, 0, windowWidth, 100)
 
@@ -108,10 +117,10 @@ function generateCity() {
   btn_generate_buildings.removeAttribute("disabled", "")
   btn_confirm_city.attribute("disabled", "")
 
-  btn_draw_roads.show()
-  btn_generate_buildings.show()
-  btn_confirm_city.show()
-  btn_detail_tray.hide()
+  btn_draw_roads.removeAttribute("hidden", "")
+  btn_generate_buildings.removeAttribute("hidden", "")
+  btn_confirm_city.removeAttribute("hidden", "")
+  btn_detail_tray.attribute("hidden", "")
 
   town_name.value(GenerateTownName())
   grid_width = size_slider.value()
@@ -126,10 +135,10 @@ function confirmCity() {
   cleanGrid()
   current_status = "city_finished"
 
-  btn_draw_roads.hide()
-  btn_generate_buildings.hide()
-  btn_confirm_city.hide()
-  btn_detail_tray.show()
+  btn_draw_roads.attribute("hidden", "")
+  btn_generate_buildings.attribute("hidden", "")
+  btn_confirm_city.attribute("hidden", "")
+  btn_detail_tray.removeAttribute("hidden", "")
 
   btn_draw_roads.removeClass("click_me")
   btn_generate_buildings.removeClass("click_me")
@@ -172,8 +181,39 @@ function createUiElements() {
   btn_confirm_city.attribute("disabled", "")
 
   btn_detail_tray = createButton("📜")
-  btn_detail_tray.mousePressed(() => (detail_tray_open = !detail_tray_open))
-  btn_detail_tray.hide()
+  btn_detail_tray.mousePressed(() => {
+    detail_tray_open = !detail_tray_open
+    if (detail_tray_open) {
+      detail_pane_container.removeAttribute("hidden", "")
+      btn_city_detail.removeAttribute("hidden", "")
+      btn_district_detail.removeAttribute("hidden", "")
+      btn_building_detail.removeAttribute("hidden", "")
+      btn_person_detail.removeAttribute("hidden", "")
+    } else {
+      detail_pane_container.attribute("hidden", "")
+      btn_city_detail.attribute("hidden", "")
+      btn_district_detail.attribute("hidden", "")
+      btn_building_detail.attribute("hidden", "")
+      btn_person_detail.attribute("hidden", "")
+    }
+  })
+  btn_detail_tray.attribute("hidden", "")
+
+  detail_pane_container = createElement("div")
+  detail_pane_container.addClass("detail_pane_container")
+  detail_pane_container.position(0, 100)
+  btn_city_detail = createButton("🌆")
+  btn_district_detail = createButton("🚧")
+  btn_building_detail = createButton("🏠")
+  btn_person_detail = createButton("🧍")
+  detail_pane_container.child(btn_city_detail)
+  detail_pane_container.child(btn_district_detail)
+  detail_pane_container.child(btn_building_detail)
+  detail_pane_container.child(btn_person_detail)
+  btn_city_detail.attribute("hidden", "")
+  btn_district_detail.attribute("hidden", "")
+  btn_building_detail.attribute("hidden", "")
+  btn_person_detail.attribute("hidden", "")
 
   left_items.child(new_city_container)
   left_items.child(btn_draw_roads)
