@@ -93,6 +93,7 @@ function generateBuildings() {
       }
 
       for (let building_cell of building.cells) {
+        grid[indexFromXY(building_cell.x, building_cell.y)].type = "building"
         building.points.push({
           x: building_cell.x * cell_size,
           y: building_cell.y * cell_size,
