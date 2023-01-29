@@ -7,9 +7,6 @@ function setup() {
 
   createUiElements()
 
-  panes.push(new Pane({ name: "Test", components: [] }))
-  panes.push(new Pane({ name: "Test2", components: [] }))
-  panes.push(new Pane({ name: "Test2", components: [] }))
   noLoop()
 }
 
