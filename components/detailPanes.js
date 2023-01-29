@@ -34,6 +34,8 @@ function openBuildingDetail(building) {
     new Pane({
       type: pane_type,
       name: "Address",
+      width: 300,
+      height: 300,
       components: [
         {
           type: "text",
