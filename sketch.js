@@ -206,7 +206,7 @@ function createUiElements() {
 
   btn_city_detail = createButton("🌆")
   btn_city_detail.mouseClicked(() => {
-    PaymentResponse.push(
+    panes.push(
       new Pane({
         name: town_name.value(),
         x: 25,
