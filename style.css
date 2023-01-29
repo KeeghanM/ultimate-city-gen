@@ -144,9 +144,11 @@ input[type="file"] {
     flex-direction: row;
     justify-content: space-between;
 }
-.pane_title {font-family: 'MedievalSharp', cursive;
+.pane_title {
+    font-family: 'MedievalSharp', cursive;
     font-size: 3rem;
     padding: 0.5rem 1rem;
+    text-decoration: underline;
 }
 .pane_close {
     font-size: 2rem;
@@ -158,5 +160,20 @@ input[type="file"] {
 .pane_close:hover{
     color:var(--color_dark)
 }
+.pane_component_container {
+    display: flex;
+    flex-direction: row;
+    padding: 0.5rem 1rem;
+    font-size: 1.6rem;
+    gap:2rem;
+    margin-block: 1rem;
+    border-bottom: 1px solid var(--color_accent_dark);
+}
+.component_label {
+    font-weight: bold;
+}
+
+
+
 
 }

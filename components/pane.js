@@ -1,8 +1,9 @@
 class Pane {
   constructor(options) {
-    this.offset = { x: panes.length * 50, y: panes.length * 50 }
-    let x = options.x || this.offset.x
-    let y = options.y || UI_BAR_HEIGHT + this.offset.y
+    this.offset = { x: 0, y: 0 }
+    let x = options.x || 0
+    let y = options.y || UI_BAR_HEIGHT
+    this.type = options.type
     this.pos = { x, y }
     this.name = options.name
     this.width = options.width || 450
@@ -67,8 +68,19 @@ class Pane {
     this.components_container.child(first_row)
 
     for (let component of options.components) {
-      console.log(component)
-      // TODO: Create actual elements
+      let component_container = createElement("div", "")
+      component_container.addClass("pane_component_container")
+
+      let component_label = createElement("span", component.label + ":")
+      component_label.addClass("component_label")
+
+      let component_value
+      if (component.type == "text") {
+        component_value = createElement("span", component.value)
+      }
+      component_container.child(component_label)
+      component_container.child(component_value)
+      this.components_container.child(component_container)
     }
 
     this.moveToTop()
