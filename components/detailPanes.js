@@ -1,13 +1,11 @@
 function closeExistingPanes(pane_type) {
   let was_open = false
   for (let pane of panes) {
-    console.log({ message: "IN", pane })
     if (pane.type == pane_type) {
       pane.destroy()
       was_open = true
     }
   }
-  console.log({ was_open, pane_type })
   return was_open
 }
 
