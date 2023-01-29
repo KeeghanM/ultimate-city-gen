@@ -6,6 +6,7 @@ function setup() {
   grid_offset = (cell_size * grid_width - width) / 2
 
   createUiElements()
+
   noLoop()
 }
 
@@ -157,7 +158,7 @@ function createUiElements() {
   new_city_container = createElement("div")
   new_city_container.addClass("new_city_button")
   btn_generate_city = createButton("🆕")
-  btn_generate_city.mousePressed(newCity)
+  btn_generate_city.mouseClicked(newCity)
   btn_generate_city.addClass("click_me")
 
   size_slider = createSlider(100, 350, 150, 10)
@@ -168,20 +169,20 @@ function createUiElements() {
   new_city_container.child(size_slider)
 
   btn_draw_roads = createButton("🚧")
-  btn_draw_roads.mousePressed(() => {
+  btn_draw_roads.mouseClicked(() => {
     current_status = "draw_roads"
     btn_draw_roads.removeClass("click_me")
   })
 
   btn_generate_buildings = createButton("🏠")
-  btn_generate_buildings.mousePressed(generateBuildings)
+  btn_generate_buildings.mouseClicked(generateBuildings)
 
   btn_confirm_city = createButton("✅")
-  btn_confirm_city.mousePressed(confirmCity)
+  btn_confirm_city.mouseClicked(confirmCity)
   btn_confirm_city.attribute("disabled", "")
 
   btn_detail_tray = createButton("📜")
-  btn_detail_tray.mousePressed(() => {
+  btn_detail_tray.mouseClicked(() => {
     detail_tray_open = !detail_tray_open
     if (detail_tray_open) {
       detail_pane_container.removeAttribute("hidden", "")
@@ -202,10 +203,40 @@ function createUiElements() {
   detail_pane_container = createElement("div")
   detail_pane_container.addClass("detail_pane_container")
   detail_pane_container.position(0, 100)
+
   btn_city_detail = createButton("🌆")
+  btn_city_detail.mouseClicked(() => {
+    let pane_type = "city_details"
+    // if it's already open, close it
+    for (let pane of panes) {
+      if (pane.type == pane_type) {
+        pane.destroy()
+      }
+    }
+
+    panes.push(
+      new Pane({
+        type: pane_type,
+        name: town_name.value(),
+        x: 25,
+        y: 25,
+        components: [
+          {
+            label: "Population",
+            type: "text",
+            value: Math.round(buildings.length * 2.5).toString(), // TODO: Switch to "GetPopulation()"
+          },
+        ],
+      })
+    )
+  })
+
   btn_district_detail = createButton("🚧")
+
   btn_building_detail = createButton("🏠")
+
   btn_person_detail = createButton("🧍")
+
   detail_pane_container.child(btn_city_detail)
   detail_pane_container.child(btn_district_detail)
   detail_pane_container.child(btn_building_detail)
@@ -229,7 +260,7 @@ function createUiElements() {
   right_items.addClass("side_items")
 
   btn_save = createButton("💾")
-  btn_save.mousePressed(saveToJson)
+  btn_save.mouseClicked(saveToJson)
 
   btn_load = createFileInput(loadFromJson)
   label_load = createElement("label", "📂")
