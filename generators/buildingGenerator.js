@@ -46,6 +46,7 @@ function generateBuildings() {
       }
 
       let building = new Building(cell)
+      building.type = type
       // Some buildings want to be larger - there is a % chance to grow in each cardinal direction
       // Taverns almost alway grow
       let grow_modifier = 0

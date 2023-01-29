@@ -6,6 +6,7 @@ function setup() {
   grid_offset = (cell_size * grid_width - width) / 2
 
   createUiElements()
+
   noLoop()
 }
 
@@ -74,8 +75,8 @@ function registeredClick(mouse_button) {
     for (let building of buildings) {
       building.selected = false
       if (pointInPolygon(t_mouseX, t_mouseY, building.points)) {
-        // building.selected = true
         selected_building = building
+        openBuildingDetail(building)
       }
     }
   }
@@ -108,9 +109,10 @@ function generateCity() {
   btn_generate_buildings.removeAttribute("disabled", "")
   btn_confirm_city.attribute("disabled", "")
 
-  btn_draw_roads.show()
-  btn_generate_buildings.show()
-  btn_confirm_city.show()
+  btn_draw_roads.removeAttribute("hidden", "")
+  btn_generate_buildings.removeAttribute("hidden", "")
+  btn_confirm_city.removeAttribute("hidden", "")
+  btn_open_city_details.attribute("hidden", "")
 
   town_name.value(GenerateTownName())
   grid_width = size_slider.value()
@@ -125,9 +127,10 @@ function confirmCity() {
   cleanGrid()
   current_status = "city_finished"
 
-  btn_draw_roads.hide()
-  btn_generate_buildings.hide()
-  btn_confirm_city.hide()
+  btn_draw_roads.attribute("hidden", "")
+  btn_generate_buildings.attribute("hidden", "")
+  btn_confirm_city.attribute("hidden", "")
+  btn_open_city_details.removeAttribute("hidden", "")
 
   btn_draw_roads.removeClass("click_me")
   btn_generate_buildings.removeClass("click_me")
@@ -146,7 +149,7 @@ function createUiElements() {
   new_city_container = createElement("div")
   new_city_container.addClass("new_city_button")
   btn_generate_city = createButton("🆕")
-  btn_generate_city.mousePressed(newCity)
+  btn_generate_city.mouseClicked(newCity)
   btn_generate_city.addClass("click_me")
 
   size_slider = createSlider(100, 350, 150, 10)
@@ -157,22 +160,31 @@ function createUiElements() {
   new_city_container.child(size_slider)
 
   btn_draw_roads = createButton("🚧")
-  btn_draw_roads.mousePressed(() => {
+  btn_draw_roads.mouseClicked(() => {
     current_status = "draw_roads"
     btn_draw_roads.removeClass("click_me")
   })
 
   btn_generate_buildings = createButton("🏠")
-  btn_generate_buildings.mousePressed(generateBuildings)
+  btn_generate_buildings.mouseClicked(generateBuildings)
 
   btn_confirm_city = createButton("✅")
-  btn_confirm_city.mousePressed(confirmCity)
+  btn_confirm_city.mouseClicked(confirmCity)
   btn_confirm_city.attribute("disabled", "")
+
+  btn_open_city_details = createButton("📜")
+  btn_open_city_details.mouseClicked(() => {
+    if (!closeExistingPanes("city_details")) {
+      openCityDetail()
+    }
+  })
+  btn_open_city_details.attribute("hidden", "")
 
   left_items.child(new_city_container)
   left_items.child(btn_draw_roads)
   left_items.child(btn_generate_buildings)
   left_items.child(btn_confirm_city)
+  left_items.child(btn_open_city_details)
 
   town_name = createInput("")
   town_name.addClass("townNameInput")
@@ -182,7 +194,7 @@ function createUiElements() {
   right_items.addClass("side_items")
 
   btn_save = createButton("💾")
-  btn_save.mousePressed(saveToJson)
+  btn_save.mouseClicked(saveToJson)
 
   btn_load = createFileInput(loadFromJson)
   label_load = createElement("label", "📂")
