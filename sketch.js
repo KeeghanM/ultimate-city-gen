@@ -6,6 +6,10 @@ function setup() {
   grid_offset = (cell_size * grid_width - width) / 2
 
   createUiElements()
+
+  panes.push(new Pane({ name: "Test", components: [] }))
+  panes.push(new Pane({ name: "Test2", components: [] }))
+  panes.push(new Pane({ name: "Test2", components: [] }))
   noLoop()
 }
 
@@ -64,6 +68,10 @@ function draw() {
   // main UI bar
   fill(color_dark)
   rect(0, 0, windowWidth, 100)
+
+  for (let pane of panes) {
+    pane.draw()
+  }
 
   // DEBUG TEXT
   //   textSize(32)
