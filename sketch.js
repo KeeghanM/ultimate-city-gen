@@ -69,10 +69,6 @@ function draw() {
   fill(color_dark)
   rect(0, 0, windowWidth, 100)
 
-  for (let pane of panes) {
-    pane.draw()
-  }
-
   // DEBUG TEXT
   //   textSize(32)
   //   fill(255)
