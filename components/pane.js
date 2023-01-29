@@ -87,7 +87,8 @@ class Pane {
   }
 
   destroy() {
-    this.components_container.remove()
     panes.splice(panes.indexOf(this), 1)
+    this.components_container.remove()
+    panes.splice(panes.indexOf(this), 1) // I don't know why this needs calling twice - but it does!
   }
 }

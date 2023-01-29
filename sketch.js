@@ -54,15 +54,6 @@ function draw() {
   pop()
 
   // DRAW UI ON TOP
-  if (detail_tray_open) {
-    UI_BAR_HEIGHT = 150
-    fill(color_light)
-    rect(0, 100, windowWidth, 50)
-  } else {
-    UI_BAR_HEIGHT = 100
-  }
-
-  // main UI bar
   fill(color_dark)
   rect(0, 0, windowWidth, 100)
 
@@ -121,7 +112,7 @@ function generateCity() {
   btn_draw_roads.removeAttribute("hidden", "")
   btn_generate_buildings.removeAttribute("hidden", "")
   btn_confirm_city.removeAttribute("hidden", "")
-  btn_detail_tray.attribute("hidden", "")
+  btn_open_city_details.attribute("hidden", "")
 
   town_name.value(GenerateTownName())
   grid_width = size_slider.value()
@@ -139,7 +130,7 @@ function confirmCity() {
   btn_draw_roads.attribute("hidden", "")
   btn_generate_buildings.attribute("hidden", "")
   btn_confirm_city.attribute("hidden", "")
-  btn_detail_tray.removeAttribute("hidden", "")
+  btn_open_city_details.removeAttribute("hidden", "")
 
   btn_draw_roads.removeClass("click_me")
   btn_generate_buildings.removeClass("click_me")
@@ -181,53 +172,19 @@ function createUiElements() {
   btn_confirm_city.mouseClicked(confirmCity)
   btn_confirm_city.attribute("disabled", "")
 
-  btn_detail_tray = createButton("📜")
-  btn_detail_tray.mouseClicked(() => {
-    detail_tray_open = !detail_tray_open
-    if (detail_tray_open) {
-      detail_pane_container.removeAttribute("hidden", "")
-      btn_city_detail.removeAttribute("hidden", "")
-      btn_district_detail.removeAttribute("hidden", "")
-      btn_building_detail.removeAttribute("hidden", "")
-      btn_person_detail.removeAttribute("hidden", "")
-    } else {
-      detail_pane_container.attribute("hidden", "")
-      btn_city_detail.attribute("hidden", "")
-      btn_district_detail.attribute("hidden", "")
-      btn_building_detail.attribute("hidden", "")
-      btn_person_detail.attribute("hidden", "")
+  btn_open_city_details = createButton("📜")
+  btn_open_city_details.mouseClicked(() => {
+    if (!closeExistingPanes("city_details")) {
+      openCityDetail()
     }
   })
-  btn_detail_tray.attribute("hidden", "")
-
-  detail_pane_container = createElement("div")
-  detail_pane_container.addClass("detail_pane_container")
-  detail_pane_container.position(0, 100)
-
-  btn_city_detail = createButton("🌆")
-  btn_city_detail.mouseClicked(openCityDetail)
-
-  btn_district_detail = createButton("🚧")
-
-  btn_building_detail = createButton("🏠")
-  btn_building_detail.mouseClicked(openBuildingDetail)
-
-  btn_person_detail = createButton("🧍")
-
-  detail_pane_container.child(btn_city_detail)
-  detail_pane_container.child(btn_district_detail)
-  detail_pane_container.child(btn_building_detail)
-  detail_pane_container.child(btn_person_detail)
-  btn_city_detail.attribute("hidden", "")
-  btn_district_detail.attribute("hidden", "")
-  btn_building_detail.attribute("hidden", "")
-  btn_person_detail.attribute("hidden", "")
+  btn_open_city_details.attribute("hidden", "")
 
   left_items.child(new_city_container)
   left_items.child(btn_draw_roads)
   left_items.child(btn_generate_buildings)
   left_items.child(btn_confirm_city)
-  left_items.child(btn_detail_tray)
+  left_items.child(btn_open_city_details)
 
   town_name = createInput("")
   town_name.addClass("townNameInput")
