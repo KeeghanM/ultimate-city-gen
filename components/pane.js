@@ -1,7 +1,9 @@
 class Pane {
   constructor(options) {
     this.offset = { x: panes.length * 50, y: panes.length * 50 }
-    this.pos = { x: 0 + this.offset.x, y: UI_BAR_HEIGHT + this.offset.y }
+    let x = options.x || this.offset.x
+    let y = options.y || UI_BAR_HEIGHT + this.offset.y
+    this.pos = { x, y }
     this.name = options.name
     this.width = options.width || 450
     this.height = options.height || windowHeight - UI_BAR_HEIGHT * 2
