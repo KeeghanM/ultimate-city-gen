@@ -84,8 +84,8 @@ function registeredClick(mouse_button) {
     for (let building of buildings) {
       building.selected = false
       if (pointInPolygon(t_mouseX, t_mouseY, building.points)) {
-        // building.selected = true
         selected_building = building
+        openBuildingDetail(building)
       }
     }
   }
@@ -210,6 +210,7 @@ function createUiElements() {
   btn_district_detail = createButton("🚧")
 
   btn_building_detail = createButton("🏠")
+  btn_building_detail.mouseClicked(openBuildingDetail)
 
   btn_person_detail = createButton("🧍")
 
