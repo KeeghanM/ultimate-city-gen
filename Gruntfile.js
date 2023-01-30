@@ -66,7 +66,7 @@ module.exports = function (grunt) {
         dest: "dist/main.js",
       },
       css: {
-        src: ["css/style.css", "lib/alert/style.css"],
+        src: ["css/style.css", "js/lib/alert/style.css"],
         dest: "dist/style.css",
       },
     },
