@@ -1,39 +1,53 @@
 module.exports = function (grunt) {
   grunt.initConfig({
-    // define source files and their destinations
+    watch: {
+      js: {
+        files: ["js/**/*.js", "index.html"],
+        tasks: ["clean", "concat", "uglify", "copy"],
+      },
+    },
+    clean: {
+      js: ["dist/*"],
+    },
+    copy: {
+      alert: {
+        files: [
+          {
+            expand: true,
+            flatten: true,
+            src: ["js/lib/alert/img/*"],
+            dest: "dist/img/",
+          },
+        ],
+      },
+      html_css: {
+        files: [{ src: ["index.html", "style.css"], dest: "dist/" }],
+      },
+    },
     uglify: {
       options: {
         mangle: false,
         compress: {},
       },
       files: {
-        src: "jsm/main.js", // source files mask
-        dest: "jsm/", // destination folder
+        src: "dist/*.js", // source files mask
+        dest: "dist/", // destination folder
         expand: true, // allow dynamic building
         flatten: true, // remove all unnecessary nesting
         ext: ".min.js", // replace .js to .min.js
       },
     },
-    clean: {
-      js: ["jsm/main.js"],
-    },
-    watch: {
-      js: {
-        files: ["js/**/*.js", "index.html"],
-        tasks: ["clean", "concat", "uglify", "clean"],
-      },
-    },
     concat: {
-      options: {
-        separator: ";",
-      },
-      dist: {
+      app: {
+        options: {
+          separator: ";",
+        },
         src: [
           "js/lib/globals.js",
           "js/lib/helpers.js",
           "js/lib/mouse_interaction.js",
           "js/lib/save_and_load.js",
-          "js/lib/cute-alert-master/cute-alert.js",
+          "js/lib/alert/alert.js",
           "js/components/building.js",
           "js/components/pane.js",
           "js/components/detailPanes.js",
@@ -48,7 +62,11 @@ module.exports = function (grunt) {
           "js/generators/names/typeLists.js",
           "js/sketch.js",
         ],
-        dest: "jsm/main.js",
+        dest: "dist/main.js",
+      },
+      css: {
+        src: ["css/style.css", "lib/alert/style.css"],
+        dest: "dist/style.css",
       },
     },
   })
@@ -57,7 +75,8 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-contrib-uglify")
   grunt.loadNpmTasks("grunt-contrib-concat")
   grunt.loadNpmTasks("grunt-contrib-clean")
+  grunt.loadNpmTasks("grunt-contrib-copy")
 
   // register at least this one task
-  grunt.registerTask("default", ["clean", "concat", "uglify", "clean"])
+  grunt.registerTask("default", ["clean", "concat", "uglify", "copy"])
 }
