@@ -1,9 +1,9 @@
 module.exports = function (grunt) {
   grunt.initConfig({
     watch: {
-      js: {
+      dev: {
         files: ["js/**/*.js", "index.html"],
-        tasks: ["clean", "concat", "uglify", "copy"],
+        tasks: ["clean", "concat", "copy"],
       },
     },
     clean: {
@@ -44,13 +44,13 @@ module.exports = function (grunt) {
         },
         src: [
           "js/lib/globals.js",
+          "js/components/building.js",
+          "js/components/pane.js",
+          "js/components/detailPanes.js",
           "js/lib/helpers.js",
           "js/lib/mouse_interaction.js",
           "js/lib/save_and_load.js",
           "js/lib/alert/alert.js",
-          "js/components/building.js",
-          "js/components/pane.js",
-          "js/components/detailPanes.js",
           "js/generators/roadGenerator.js",
           "js/generators/buildingGenerator.js",
           "js/generators/names/districtNames.js",
@@ -78,5 +78,6 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-contrib-copy")
 
   // register at least this one task
-  grunt.registerTask("default", ["clean", "concat", "uglify", "copy"])
+  grunt.registerTask("dev", ["clean", "concat", "copy"])
+  grunt.registerTask("live", ["clean", "concat", "uglify", "copy"])
 }
