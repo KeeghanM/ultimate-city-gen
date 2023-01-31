@@ -6,8 +6,6 @@ class Pane {
     this.type = options.type
     this.pos = { x, y }
     this.name = options.name
-    this.width = options.width || 450
-    this.height = options.height || windowHeight - UI_BAR_HEIGHT * 2
     this.components_container = createElement("div", "")
     this.setupComponents(options)
     this.setPosition(this.pos.x, this.pos.y)
@@ -49,8 +47,6 @@ class Pane {
   }
 
   setupComponents(options) {
-    this.components_container.style("width", this.width + "px")
-    this.components_container.style("height", this.height + "px")
     this.components_container.addClass("pane_container")
 
     let first_row = createElement("div", "")
@@ -93,7 +89,7 @@ class Pane {
           } else {
             text = list_item
           }
-          let list_item_element = createElement("ul", text)
+          let list_item_element = createElement("li", text)
           list.child(list_item_element)
         }
         component_container.child(component_label)
@@ -103,7 +99,7 @@ class Pane {
         component_container = createElement("ul", "")
         component_container.addClass("pane_tags")
         for (let list_item of component.value) {
-          let list_item_element = createElement("ul", list_item)
+          let list_item_element = createElement("li", list_item)
           component_container.child(list_item_element)
         }
       }
