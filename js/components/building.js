@@ -18,6 +18,7 @@ class Building {
     this.roof_lines = []
     this.roof_points = []
     this.color = ROOF_COLORS[Math.floor(Math.random() * ROOF_COLORS.length)]
+    this.inhabitants = []
   }
 
   draw() {

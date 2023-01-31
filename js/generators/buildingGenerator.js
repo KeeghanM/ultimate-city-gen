@@ -50,7 +50,10 @@ function generateBuildings() {
       // Some buildings want to be larger - there is a % chance to grow in each cardinal direction
       // Taverns almost alway grow
       let grow_modifier = 0
-      if (building.type == "tavern") grow_modifier = 50
+      if (building.type == "tavern") {
+        grow_modifier = 50
+        building.business_name = "Tavern Name"
+      }
 
       if (
         grid[indexFromXY(clamp(cell.x + 1, 0, grid_width - 1), cell.y)].type ==
@@ -233,6 +236,54 @@ function generateBuildings() {
       delete building.corners
       delete building.cells
 
+      // If this is a business, we need to set what type of business.
+      // Add 1 person per building, as this might change the name of the business.
+      // Houses will be populated later.
+      if (building.type == "business") {
+        let business_type = getBuildingType()
+        building.types_list = business_type.types
+        building.titles = business_type.job_titles
+
+        let first_employee = new Person({
+          job: building.titles[
+            Math.floor(Math.random() * building.titles.length)
+          ],
+        })
+
+        let business_name = ""
+        // Decide if the first employee's name will be used
+        // in the store name - or if a random one. 50/50 chance
+        let random = Math.random() * 100
+        if (random < 50) {
+          business_name += first_employee.first_name + "'s "
+        } else if (random < 95) {
+          // Random name. TODO: Based the ratio's off of race spread in city settings
+          // 5% Chance for no name in front
+          let random_race = Math.random() * 100
+          let name =
+            random_race < 33
+              ? GenerateHumanName()
+              : random_race < 66
+              ? GenerateElfName()
+              : GenerateDwarfName()
+          business_name += name.split(" ")[0] + "'s "
+        }
+
+        business_name +=
+          business_type.name_options[
+            Math.floor(Math.random() * business_type.name_options.length)
+          ]
+
+        building.business_name = business_name
+        building.inhabitants.push(first_employee)
+
+        first_employee.place_of_employment = building
+        city_inhabitants.push(first_employee)
+      }
+
+      // Taverns have specific logic
+      if (building.type == "tavern") {
+      }
       buildings.push(building)
     }
   }
@@ -242,5 +293,6 @@ function generateBuildings() {
   btn_generate_buildings.removeClass("click_me")
   btn_draw_roads.removeClass("click_me") // Just in case
 
-  current_status = "city_finished"
+  current_status = "generating_people"
+  generatePeople()
 }

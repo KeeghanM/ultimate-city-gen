@@ -2,5 +2,5 @@
 **/.svn
 **/.hg
 **/node_modules
-**/generators/names
+**/js/generators/names
 **/jsm

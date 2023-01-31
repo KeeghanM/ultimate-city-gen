@@ -46,21 +46,23 @@ module.exports = function (grunt) {
         src: [
           "js/lib/globals.js",
           "js/components/building.js",
+          "js/components/person.js",
           "js/components/pane.js",
           "js/components/detailPanes.js",
           "js/lib/helpers.js",
           "js/lib/mouse_interaction.js",
           "js/lib/save_and_load.js",
           "js/lib/alert/alert.js",
-          "js/generators/roadGenerator.js",
-          "js/generators/buildingGenerator.js",
           "js/generators/names/districtNames.js",
           "js/generators/names/dwarfNames.js",
           "js/generators/names/elfNames.js",
           "js/generators/names/humanNames.js",
-          "js/generators/names/jobs.js",
+          "js/generators/names/buildingsAndJobs.js",
           "js/generators/names/townNames.js",
-          "js/generators/names/typeLists.js",
+          "js/generators/names/physicalDescriptions.js",
+          "js/generators/roadGenerator.js",
+          "js/generators/peopleGenerator.js",
+          "js/generators/buildingGenerator.js",
           "js/sketch.js",
         ],
         dest: "dist/main.js",
@@ -86,4 +88,5 @@ module.exports = function (grunt) {
     "copy",
     "clean:raw",
   ])
+  grunt.registerTask("leaveRaw", ["clean:dist", "concat", "uglify", "copy"])
 }

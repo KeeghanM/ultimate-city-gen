@@ -6,8 +6,6 @@ class Pane {
     this.type = options.type
     this.pos = { x, y }
     this.name = options.name
-    this.width = options.width || 450
-    this.height = options.height || windowHeight - UI_BAR_HEIGHT * 2
     this.components_container = createElement("div", "")
     this.setupComponents(options)
     this.setPosition(this.pos.x, this.pos.y)
@@ -16,9 +14,9 @@ class Pane {
   clicked() {
     return (
       mouseX > this.pos.x &&
-      mouseX < this.pos.x + this.width &&
+      mouseX < this.pos.x + this.components_container.elt.offsetWidth &&
       mouseY > this.pos.y &&
-      mouseY < this.pos.y + this.height
+      mouseY < this.pos.y + this.components_container.elt.offsetHeight
     )
   }
 
@@ -38,7 +36,11 @@ class Pane {
     }
   }
   setPosition(newX, newY) {
-    let clamped_x = clamp(newX - this.offset.x, 0, windowWidth - this.width)
+    let clamped_x = clamp(
+      newX - this.offset.x,
+      0,
+      windowWidth - this.components_container.elt.offsetWidth
+    )
     let clamped_y = clamp(
       newY - this.offset.y,
       UI_BAR_HEIGHT,
@@ -49,8 +51,6 @@ class Pane {
   }
 
   setupComponents(options) {
-    this.components_container.style("width", this.width + "px")
-    this.components_container.style("height", this.height + "px")
     this.components_container.addClass("pane_container")
 
     let first_row = createElement("div", "")
@@ -68,18 +68,51 @@ class Pane {
     this.components_container.child(first_row)
 
     for (let component of options.components) {
-      let component_container = createElement("div", "")
-      component_container.addClass("pane_component_container")
-
-      let component_label = createElement("span", component.label + ":")
-      component_label.addClass("component_label")
-
-      let component_value
+      let component_container
       if (component.type == "text") {
-        component_value = createElement("span", component.value)
+        component_container = createElement("div", "")
+        component_container.addClass("pane_component_container")
+
+        let component_label = createElement("span", component.label + ":")
+        component_label.addClass("component_label")
+
+        let component_value = createElement("span", component.value)
+        component_container.child(component_label)
+        component_container.child(component_value)
       }
-      component_container.child(component_label)
-      component_container.child(component_value)
+      if (component.type == "list_click" || component.type == "list") {
+        component_container = createElement("details", "")
+        component_container.addClass("pane_component_container")
+        if (component.open) component_container.attribute("open", "")
+
+        let component_label = createElement("summary", component.label)
+        let list = createElement("ul", "")
+        for (let list_item of component.value) {
+          let text
+          if (component.type == "list_click") {
+            if (list_item.constructor.name == "Person") {
+              text = list_item.first_name + " " + list_item.last_name // TODO: Make this a thing that is clickable to open a new pane
+            } else if (list_item.constructor.name == "Building") {
+              text =
+                list_item.type == "house" ? "House" : list_item.business_name
+            }
+          } else {
+            text = list_item
+          }
+          let list_item_element = createElement("li", text)
+          list.child(list_item_element)
+        }
+        component_container.child(component_label)
+        component_container.child(list)
+      }
+      if (component.type == "tags") {
+        component_container = createElement("ul", "")
+        component_container.addClass("pane_tags")
+        for (let list_item of component.value) {
+          let list_item_element = createElement("li", list_item)
+          component_container.child(list_item_element)
+        }
+      }
       this.components_container.child(component_container)
     }
 
