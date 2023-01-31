@@ -14,9 +14,9 @@ class Pane {
   clicked() {
     return (
       mouseX > this.pos.x &&
-      mouseX < this.pos.x + this.width &&
+      mouseX < this.pos.x + this.components_container.elt.offsetWidth &&
       mouseY > this.pos.y &&
-      mouseY < this.pos.y + this.height
+      mouseY < this.pos.y + this.components_container.elt.offsetHeight
     )
   }
 
@@ -36,7 +36,11 @@ class Pane {
     }
   }
   setPosition(newX, newY) {
-    let clamped_x = clamp(newX - this.offset.x, 0, windowWidth - this.width)
+    let clamped_x = clamp(
+      newX - this.offset.x,
+      0,
+      windowWidth - this.components_container.elt.offsetWidth
+    )
     let clamped_y = clamp(
       newY - this.offset.y,
       UI_BAR_HEIGHT,
