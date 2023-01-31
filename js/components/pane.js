@@ -68,18 +68,45 @@ class Pane {
     this.components_container.child(first_row)
 
     for (let component of options.components) {
-      let component_container = createElement("div", "")
-      component_container.addClass("pane_component_container")
-
-      let component_label = createElement("span", component.label + ":")
-      component_label.addClass("component_label")
-
-      let component_value
+      let component_container
       if (component.type == "text") {
-        component_value = createElement("span", component.value)
+        component_container = createElement("div", "")
+        component_container.addClass("pane_component_container")
+
+        let component_label = createElement("span", component.label + ":")
+        component_label.addClass("component_label")
+
+        let component_value = createElement("span", component.value)
+        component_container.child(component_label)
+        component_container.child(component_value)
       }
-      component_container.child(component_label)
-      component_container.child(component_value)
+      if (component.type == "list_click" || component.type == "list") {
+        component_container = createElement("details", "")
+        component_container.addClass("pane_component_container")
+        let component_label = createElement("summary", component.label)
+        let list = createElement("ul", "")
+        for (let list_item of component.value) {
+          let text
+          if (component.type == "list_click") {
+            // For now we know this is a person. TODO: Make this not shit
+            text = list_item.first_name + " " + list_item.last_name // TODO: Make this a thing that is clickable to open a new pane
+          } else {
+            text = list_item
+          }
+          let list_item_element = createElement("ul", text)
+          list.child(list_item_element)
+        }
+        component_container.child(component_label)
+        component_container.child(list)
+      }
+      if (component.type == "tags") {
+        component_container = createElement("ul", "")
+        component_container.addClass("pane_tags")
+        for (let list_item of component.value) {
+          let list_item_element = createElement("ul", list_item)
+          component_container.child(list_item_element)
+        }
+      }
       this.components_container.child(component_container)
     }
 

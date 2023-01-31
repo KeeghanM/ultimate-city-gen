@@ -29,19 +29,32 @@ function openCityDetail() {
 
 function openBuildingDetail(building) {
   let pane_type = "building_details"
+  let pane_name =
+    building.type == "house" ? "House Address" : building.business_name
+  let components =
+    building.type == "house"
+      ? [
+          {
+            type: "list_click",
+            label: "Inhabitants",
+            value: building.inhabitants,
+          },
+        ]
+      : [
+          { type: "tags", label: "Tags", value: building.types_list },
+          {
+            type: "list_click",
+            label: "Employees",
+            value: building.inhabitants,
+          },
+          { type: "list", label: "Shop", value: ["Sword - 10gp", "Bag - 10s"] },
+        ]
   panes.push(
     new Pane({
       type: pane_type,
-      name: "Address",
-      width: 300,
+      name: pane_name,
       height: 300,
-      components: [
-        {
-          type: "text",
-          label: "Type",
-          value: building.type,
-        },
-      ],
+      components,
     })
   )
 }

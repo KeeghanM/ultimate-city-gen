@@ -272,12 +272,10 @@ function generateBuildings() {
           ]
 
         building.business_name = business_name
-
-        building.employees = []
-        building.employees.push(first_employee)
+        building.inhabitants.push(first_employee)
 
         first_employee.place_of_employment = building
-        inhabitants.push(first_employee)
+        city_inhabitants.push(first_employee)
       }
 
       // Taverns have specific logic
