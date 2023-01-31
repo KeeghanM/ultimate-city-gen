@@ -22,13 +22,21 @@ class Person {
       ? "Female"
       : "Non-Binary"
 
+    let gender_selector =
+      this.gender == "Female"
+        ? 1
+        : this.gender == "Male"
+        ? 0
+        : Math.random() < 0.5
+        ? 0
+        : 1
     let name = options.name
       ? options.name
       : this.race == "Human"
-      ? GenerateHumanName()
+      ? GenerateHumanName(gender_selector)
       : this.race == "Elf"
-      ? GenerateElfName()
-      : GenerateDwarfName()
+      ? GenerateElfName(gender_selector)
+      : GenerateDwarfName(gender_selector)
     this.first_name = name.split(" ")[0]
     this.last_name = name.split(" ")[1]
 
