@@ -79,6 +79,8 @@ class Pane {
       if (component.type == "list_click" || component.type == "list") {
         component_container = createElement("details", "")
         component_container.addClass("pane_component_container")
+        if (component.open) component_container.attribute("open", "")
+
         let component_label = createElement("summary", component.label)
         let list = createElement("ul", "")
         for (let list_item of component.value) {

@@ -38,6 +38,7 @@ function openBuildingDetail(building) {
             type: "list_click",
             label: "Inhabitants",
             value: building.inhabitants,
+            open: true,
           },
         ]
       : [
@@ -47,7 +48,12 @@ function openBuildingDetail(building) {
             label: "Employees",
             value: building.inhabitants,
           },
-          { type: "list", label: "Shop", value: ["Sword - 10gp", "Bag - 10s"] },
+          {
+            type: "list",
+            label: "Shop",
+            value: ["Sword - 10gp", "Bag - 10s"],
+            open: true,
+          },
         ]
   panes.push(
     new Pane({
