@@ -90,8 +90,12 @@ class Pane {
         for (let list_item of component.value) {
           let text
           if (component.type == "list_click") {
-            // For now we know this is a person. TODO: Make this not shit
-            text = list_item.first_name + " " + list_item.last_name // TODO: Make this a thing that is clickable to open a new pane
+            if (list_item.constructor.name == "Person") {
+              text = list_item.first_name + " " + list_item.last_name // TODO: Make this a thing that is clickable to open a new pane
+            } else if (list_item.constructor.name == "Building") {
+              text =
+                list_item.type == "house" ? "House" : list_item.business_name
+            }
           } else {
             text = list_item
           }

@@ -25,6 +25,8 @@ let btn_generate_city,
   btn_save,
   btn_load,
   btn_open_city_details,
+  btn_open_building_list,
+  btn_open_people_list,
   label_load,
   size_slider,
   town_name

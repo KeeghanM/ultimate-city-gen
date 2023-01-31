@@ -50,7 +50,10 @@ function generateBuildings() {
       // Some buildings want to be larger - there is a % chance to grow in each cardinal direction
       // Taverns almost alway grow
       let grow_modifier = 0
-      if (building.type == "tavern") grow_modifier = 50
+      if (building.type == "tavern") {
+        grow_modifier = 50
+        building.business_name = "Tavern Name"
+      }
 
       if (
         grid[indexFromXY(clamp(cell.x + 1, 0, grid_width - 1), cell.y)].type ==

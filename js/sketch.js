@@ -131,6 +131,8 @@ function confirmCity() {
   btn_generate_buildings.attribute("hidden", "")
   btn_confirm_city.attribute("hidden", "")
   btn_open_city_details.removeAttribute("hidden", "")
+  btn_open_building_list.removeAttribute("hidden", "")
+  btn_open_people_list.removeAttribute("hidden", "")
 
   btn_draw_roads.removeClass("click_me")
   btn_generate_buildings.removeClass("click_me")
@@ -174,17 +176,36 @@ function createUiElements() {
 
   btn_open_city_details = createButton("📜")
   btn_open_city_details.mouseClicked(() => {
+    btn_open_city_details.removeClass("click_me")
     if (!closeExistingPanes("city_details")) {
       openCityDetail()
     }
   })
   btn_open_city_details.attribute("hidden", "")
 
+  btn_open_building_list = createButton("🏠")
+  btn_open_building_list.mouseClicked(() => {
+    if (!closeExistingPanes("building_list")) {
+      openBuildingList()
+    }
+  })
+  btn_open_building_list.attribute("hidden", "")
+
+  btn_open_people_list = createButton("🧍")
+  btn_open_people_list.mouseClicked(() => {
+    if (!closeExistingPanes("people_list")) {
+      openPeopleList()
+    }
+  })
+  btn_open_people_list.attribute("hidden", "")
+
   left_items.child(new_city_container)
   left_items.child(btn_draw_roads)
   left_items.child(btn_generate_buildings)
   left_items.child(btn_confirm_city)
   left_items.child(btn_open_city_details)
+  left_items.child(btn_open_building_list)
+  left_items.child(btn_open_people_list)
 
   town_name = createInput("")
   town_name.addClass("townNameInput")
