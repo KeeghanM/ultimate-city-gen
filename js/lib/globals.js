@@ -14,6 +14,7 @@ let grid = []
 let buildings = []
 let miners = []
 let generation_step = "roads"
+let inhabitants = []
 
 // UI Elements
 let btn_generate_city,

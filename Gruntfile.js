@@ -46,6 +46,7 @@ module.exports = function (grunt) {
         src: [
           "js/lib/globals.js",
           "js/components/building.js",
+          "js/components/person.js",
           "js/components/pane.js",
           "js/components/detailPanes.js",
           "js/lib/helpers.js",
