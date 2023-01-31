@@ -20,7 +20,7 @@ function openCityDetail() {
         {
           label: "Population",
           type: "text",
-          value: Math.round(buildings.length * 2.5).toString(), // TODO: Switch to "GetPopulation()"
+          value: city_inhabitants.length,
         },
       ],
     })
@@ -29,11 +29,15 @@ function openCityDetail() {
 
 function openBuildingDetail(building) {
   let pane_type = "building_details"
-  let pane_name =
-    building.type == "house" ? "House Address" : building.business_name
+  let pane_name = building.type == "house" ? "House" : building.business_name
   let components =
     building.type == "house"
       ? [
+          {
+            label: "Address",
+            type: "text",
+            value: "Coming soon", // TODO: Generate addresses
+          },
           {
             type: "list_click",
             label: "Inhabitants",
