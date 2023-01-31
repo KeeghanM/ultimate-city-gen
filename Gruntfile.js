@@ -61,6 +61,7 @@ module.exports = function (grunt) {
           "js/generators/names/townNames.js",
           "js/generators/names/physicalDescriptions.js",
           "js/generators/roadGenerator.js",
+          "js/generators/peopleGenerator.js",
           "js/generators/buildingGenerator.js",
           "js/sketch.js",
         ],
@@ -87,4 +88,5 @@ module.exports = function (grunt) {
     "copy",
     "clean:raw",
   ])
+  grunt.registerTask("leaveRaw", ["clean:dist", "concat", "uglify", "copy"])
 }
