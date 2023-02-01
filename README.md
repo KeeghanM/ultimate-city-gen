@@ -19,22 +19,22 @@ Well this is just that!
 | ----------- | ----------- | ----------- |
 | Town | Can handle anything from 500 to 5000 people |✔️|
 | Town | Generate natural roads, and then go in and manipulate them by hand |✔️|
-| Town | Adjust settings by district |🔸|
+| Town | Adjust settings by district |❌|
 | Town | Automatically names streets |❌|
 | Town | Adjust the ratio of houses/buildings |❌|
 | Buildings | Generates houses, shops, and taverns | ✔️ |
+| Buildings | Shops have catalogues, taverns have menus & patrons |🔸|
 | Buildings | Generates farms |🔸|
-| Buildings | Shops have catalogues, taverns have menus & patrons |❌|
 | Buildings | Add and remove buildings, change building sizes |❌|
-| People | Every person has a description |❌|
-| People | Children inherit parent traits |❌|
-| People | People have specific homes, and work in specific buildings |❌|
+| People | People have specific homes, and work in specific buildings |✔️|
+| People | Children inherit parent traits |✔️|
+| People | Every person has a description |🔸|
 | People | Adjust the ratio of different races |❌|
-| App | Runs entirely in your browser |✔️ |
-| App | Saves & load files to your local PC |✔️  |
-| App | Absolutely everything is editable, from people descriptions to the cost of a pint |🔸 |
-| App | Saves & load multiple different cities in Local Storage | 🔸 |
-| App | Cloud storage | ❌ |
+| App | Runs entirely in your browser |✔️|
+| App | Saves & load files to your local PC |🔸|
+| App | Absolutely everything is editable, from people descriptions to the cost of a pint |🔸|
+| App | Saves & load multiple different cities in Local Storage |🔸|
+| App | Cloud storage |❌|
 
 #### Potential Future ideas
 | Section | Description 
