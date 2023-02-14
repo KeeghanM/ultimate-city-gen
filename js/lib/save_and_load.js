@@ -1,16 +1,23 @@
 function saveToJson() {
-  let town = {
+  let town = JSON.stringify({
     grid,
     buildings,
     city_inhabitants,
     name: town_name.value(),
-  }
+  })
 
-  download(JSON.stringify(town), town_name.value() + ".json", "text/plain")
+  alert('Size of sample is: ' + town.length)
+  let compressed = LZString.compress(town)
+  alert('Size of compressed is: ' + compressed.length)
+  download(
+    compressed,
+    town_name.value() + '.ucg',
+    'text/plain'
+  )
 }
 
 function loadFromJson(file) {
-  if (file.subtype !== "json") return
+  if (file.subtype !== 'json') return
 
   let loaded_town = file.data
   if (!loaded_town.buildings || !loaded_town.grid || !loaded_town.name) return
