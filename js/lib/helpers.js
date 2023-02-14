@@ -84,3 +84,11 @@ function pointInPolygon(x, y, poly) {
 
   return inside
 }
+
+function generateUniqueId() {
+  return Math.round(Date.now() * Math.random()) + '-' +  Math.round(Date.now() * Math.random()) + '-' +  Math.round(Date.now() * Math.random())
+}
+
+function indexFromId(array,id) {
+  return array.map(element => element.id).indexOf(id)
+}

@@ -10,7 +10,8 @@ const ROOF_COLORS = [
 ]
 
 class Building {
-  constructor(cell) {
+  constructor(cell,options={}) {
+    this.id = options.id ? options.id : generateUniqueId()
     if (cell) this.cells = [{ x: cell.x, y: cell.y }]
     this.type = ""
     this.points = []

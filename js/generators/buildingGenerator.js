@@ -275,9 +275,9 @@ function generateBuildings() {
           ]
 
         building.business_name = business_name
-        building.inhabitants.push(first_employee)
+        building.inhabitants.push(first_employee.id)
 
-        first_employee.place_of_employment = building
+        first_employee.place_of_employment = building.id
         city_inhabitants.push(first_employee)
       }
 

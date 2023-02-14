@@ -4,16 +4,14 @@ function generatePeople() {
   // Once homed - we can then decide if the people will have a family.
   // Generate the family, and if needed - put them in places of work!
 
-  // Because we're looping existing people, we need a temp
-  // storage for any new people we make. Hence:
-  let new_inhabitants = []
-  for (let person of city_inhabitants) {
-    // Born children get pushed directly to city_inhabitants
-    // So to skip these, just check if there are parents
-    // All "Original" inhabitants won't have parents
-    if (person.parents.length > 0) continue
+  // Because we're pushing new people into the inhabitants list
+  // we only want to loop through the original ones. So take a reference
+  // of the number (length) now and use that to stop the loop.
+  let population = city_inhabitants.length
+  for (let i = 0; i < population - 1; i++) {
+    let person = city_inhabitants[i]
 
-    let place_of_work_index = buildings.indexOf(person.place_of_employment)
+    let place_of_work_index = indexFromId(buildings, person.place_of_employment)
     for (
       let step_count = 1;
       step_count < buildings.length / 2 - 1;
@@ -24,11 +22,11 @@ function generatePeople() {
       let potential_house =
         buildings[clamp(place_of_work_index + step_count, 0, buildings.length)]
       if (
-        potential_house.type == "house" &&
+        potential_house.type == 'house' &&
         potential_house.inhabitants.length == 0
       ) {
-        potential_house.inhabitants.push(person)
-        person.home = potential_house
+        potential_house.inhabitants.push(person.id)
+        person.home = potential_house.id
         break
       }
 
@@ -36,11 +34,11 @@ function generatePeople() {
       potential_house =
         buildings[clamp(place_of_work_index - step_count, 0, buildings.length)]
       if (
-        potential_house.type == "house" &&
+        potential_house.type == 'house' &&
         potential_house.inhabitants.length == 0
       ) {
-        potential_house.inhabitants.push(person)
-        person.home = potential_house
+        potential_house.inhabitants.push(person.id)
+        person.home = potential_house.id
         break
       }
     }
@@ -51,21 +49,20 @@ function generatePeople() {
       let partner = new Person({
         age: Math.round(person.age + Math.random() * 10), // Always go up, to avoid noncing
         race: person.race,
-        partner: person,
+        partner: person.id,
         home: person.home,
       })
       partner.findJob()
-      person.partner = partner
-      new_inhabitants.push(partner)
+      person.partner = partner.id
+      city_inhabitants.push(partner)
     }
 
     // Recursive function to generate children
     maybeHaveAKid(person)
   }
 
-  // Add any new people in
-  city_inhabitants = city_inhabitants.concat(new_inhabitants)
-  current_status = "city_finished"
+  
+  current_status = 'city_finished'
 }
 
 function maybeHaveAKid(person) {

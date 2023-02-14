@@ -2,6 +2,7 @@ function saveToJson() {
   let town = {
     grid,
     buildings,
+    city_inhabitants,
     name: town_name.value(),
   }
 
