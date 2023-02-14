@@ -6,9 +6,7 @@ function saveToJson() {
     name: town_name.value(),
   })
 
-  alert('Size of sample is: ' + town.length)
-  let compressed = LZString.compress(town)
-  alert('Size of compressed is: ' + compressed.length)
+  let compressed = LZString.compressToUTF16(town)
   download(
     compressed,
     town_name.value() + '.ucg',
@@ -16,18 +14,20 @@ function saveToJson() {
   )
 }
 
-function loadFromJson(file) {
-  if (file.subtype !== 'json') return
+function loadFromJson(compressed_json) {
+  let loaded_town = JSON.parse(LZString.decompressFromUTF16(compressed_json))
 
-  let loaded_town = file.data
+
   if (!loaded_town.buildings || !loaded_town.grid || !loaded_town.name) return
 
   grid = loaded_town.grid
   town_name.value(loaded_town.name)
   buildings = []
+  city_inhabitants = []
 
-  // Need to reconstruct the building objects to get access to their funcitons
+  // Need to reconstruct the building's and inhabitants as objects
   for (let loaded_building of loaded_town.buildings) {
+    console.log(loaded_building)
     let new_building = new Building()
     new_building.type = loaded_building.type
     new_building.points = loaded_building.points

@@ -10,7 +10,7 @@ function setup() {
   noLoop()
 }
 
-let debug = ""
+let debug = ''
 
 function draw() {
   if (windowWidth < 1000) {
@@ -27,7 +27,7 @@ function draw() {
   scale(currentScale)
 
   for (let cell of grid) {
-    if (cell.type == "road") {
+    if (cell.type == 'road') {
       fill(cell.color)
       rect(cell.x * cell_size, cell.y * cell_size, cell_size)
     }
@@ -38,12 +38,12 @@ function draw() {
   }
 
   rectMode(CENTER)
-  if (current_status == "draw_roads") {
+  if (current_status == 'draw_roads') {
     let t_mouseX = (mouseX - transformX) / currentScale
     let t_mouseY = (mouseY - transformY) / currentScale
 
-    fill("rgba(255,255,255, 0.25)") // ROAD GREY
-    if (keyIsDown(SHIFT)) fill("rgba(255, 145, 0, 0.25)") // DIRT BROWN
+    fill('rgba(255,255,255, 0.25)') // ROAD GREY
+    if (keyIsDown(SHIFT)) fill('rgba(255, 145, 0, 0.25)') // DIRT BROWN
 
     rect(
       Math.floor(t_mouseX / cell_size) * cell_size + cell_size / 2,
@@ -67,7 +67,7 @@ function registeredClick(mouse_button) {
   let t_mouseX = (mouseX - transformX) / currentScale
   let t_mouseY = (mouseY - transformY) / currentScale
 
-  if (current_status == "draw_roads") {
+  if (current_status == 'draw_roads') {
     drawRoad(t_mouseX, t_mouseY)
   } else {
     selected_building = undefined
@@ -83,19 +83,19 @@ function registeredClick(mouse_button) {
 }
 
 function cleanGrid() {
-  grid = grid.filter((cell) => cell.type !== "dirt")
+  grid = grid.filter((cell) => cell.type !== 'dirt')
 }
 
 function newCity() {
   cuteAlert({
-    type: "question",
-    title: "Are you sure?",
+    type: 'question',
+    title: 'Are you sure?',
     message:
-      "Doing this will remove your entire city. Be sure to save before committing to this!",
-    confirmText: "Go!",
-    cancelText: "Cancel",
+      'Doing this will remove your entire city. Be sure to save before committing to this!',
+    confirmText: 'Go!',
+    cancelText: 'Cancel',
   }).then((e) => {
-    if (e == "confirm") {
+    if (e == 'confirm') {
       generateCity()
     } else {
       // nothing
@@ -104,15 +104,15 @@ function newCity() {
 }
 
 function generateCity() {
-  btn_draw_roads.removeAttribute("disabled", "")
-  btn_generate_city.removeClass("click_me")
-  btn_generate_buildings.removeAttribute("disabled", "")
-  btn_confirm_city.attribute("disabled", "")
+  btn_draw_roads.removeAttribute('disabled', '')
+  btn_generate_city.removeClass('click_me')
+  btn_generate_buildings.removeAttribute('disabled', '')
+  btn_confirm_city.attribute('disabled', '')
 
-  btn_draw_roads.removeAttribute("hidden", "")
-  btn_generate_buildings.removeAttribute("hidden", "")
-  btn_confirm_city.removeAttribute("hidden", "")
-  btn_open_city_details.attribute("hidden", "")
+  btn_draw_roads.removeAttribute('hidden', '')
+  btn_generate_buildings.removeAttribute('hidden', '')
+  btn_confirm_city.removeAttribute('hidden', '')
+  btn_open_city_details.attribute('hidden', '')
 
   town_name.value(GenerateTownName())
   grid_width = size_slider.value()
@@ -125,79 +125,79 @@ function generateCity() {
 
 function confirmCity() {
   cleanGrid()
-  current_status = "city_finished"
+  current_status = 'city_finished'
 
-  btn_draw_roads.attribute("hidden", "")
-  btn_generate_buildings.attribute("hidden", "")
-  btn_confirm_city.attribute("hidden", "")
-  btn_open_city_details.removeAttribute("hidden", "")
-  btn_open_building_list.removeAttribute("hidden", "")
-  btn_open_people_list.removeAttribute("hidden", "")
+  btn_draw_roads.attribute('hidden', '')
+  btn_generate_buildings.attribute('hidden', '')
+  btn_confirm_city.attribute('hidden', '')
+  btn_open_city_details.removeAttribute('hidden', '')
+  btn_open_building_list.removeAttribute('hidden', '')
+  btn_open_people_list.removeAttribute('hidden', '')
 
-  btn_draw_roads.removeClass("click_me")
-  btn_generate_buildings.removeClass("click_me")
-  btn_confirm_city.removeClass("click_me")
-  btn_generate_city.removeClass("click_me")
+  btn_draw_roads.removeClass('click_me')
+  btn_generate_buildings.removeClass('click_me')
+  btn_confirm_city.removeClass('click_me')
+  btn_generate_city.removeClass('click_me')
 }
 
 function createUiElements() {
-  header_container = createElement("div")
-  header_container.addClass("header_container")
+  header_container = createElement('div')
+  header_container.addClass('header_container')
   header_container.position(0, 0)
 
-  left_items = createElement("div")
-  left_items.addClass("side_items")
+  left_items = createElement('div')
+  left_items.addClass('side_items')
 
-  new_city_container = createElement("div")
-  new_city_container.addClass("new_city_button")
-  btn_generate_city = createButton("🆕")
+  new_city_container = createElement('div')
+  new_city_container.addClass('new_city_button')
+  btn_generate_city = createButton('🆕')
   btn_generate_city.mouseClicked(newCity)
-  btn_generate_city.addClass("click_me")
+  btn_generate_city.addClass('click_me')
 
   size_slider = createSlider(100, 350, 150, 10)
-  size_slider.style("width", "95px")
-  size_slider.addClass("size_slider")
+  size_slider.style('width', '95px')
+  size_slider.addClass('size_slider')
 
   new_city_container.child(btn_generate_city)
   new_city_container.child(size_slider)
 
-  btn_draw_roads = createButton("🚧")
+  btn_draw_roads = createButton('🚧')
   btn_draw_roads.mouseClicked(() => {
-    current_status = "draw_roads"
-    btn_draw_roads.removeClass("click_me")
+    current_status = 'draw_roads'
+    btn_draw_roads.removeClass('click_me')
   })
 
-  btn_generate_buildings = createButton("🏠")
+  btn_generate_buildings = createButton('🏠')
   btn_generate_buildings.mouseClicked(generateBuildings)
 
-  btn_confirm_city = createButton("✅")
+  btn_confirm_city = createButton('✅')
   btn_confirm_city.mouseClicked(confirmCity)
-  btn_confirm_city.attribute("disabled", "")
+  btn_confirm_city.attribute('disabled', '')
 
-  btn_open_city_details = createButton("📜")
+  btn_open_city_details = createButton('📜')
   btn_open_city_details.mouseClicked(() => {
-    btn_open_city_details.removeClass("click_me")
-    if (!closeExistingPanes("city_details")) {
+    btn_open_city_details.removeClass('click_me')
+    if (!closeExistingPanes('city_details')) {
       openCityDetail()
     }
   })
-  btn_open_city_details.attribute("hidden", "")
+  btn_open_city_details.attribute('hidden', '')
 
-  btn_open_building_list = createButton("🏠")
+  btn_open_building_list = createButton('🏠')
   btn_open_building_list.mouseClicked(() => {
-    if (!closeExistingPanes("building_list")) {
+    if (!closeExistingPanes('building_list')) {
       openBuildingList()
     }
   })
-  btn_open_building_list.attribute("hidden", "")
+  btn_open_building_list.attribute('hidden', '')
 
-  btn_open_people_list = createButton("🧍")
+  btn_open_people_list = createButton('🧍')
   btn_open_people_list.mouseClicked(() => {
-    if (!closeExistingPanes("people_list")) {
+    if (!closeExistingPanes('people_list')) {
       openPeopleList()
     }
   })
-  btn_open_people_list.attribute("hidden", "")
+  btn_open_people_list.attribute('hidden', '')
 
   left_items.child(new_city_container)
   left_items.child(btn_draw_roads)
@@ -207,18 +207,24 @@ function createUiElements() {
   left_items.child(btn_open_building_list)
   left_items.child(btn_open_people_list)
 
-  town_name = createInput("")
-  town_name.addClass("townNameInput")
-  town_name.value("Generate your town...")
+  town_name = createInput('')
+  town_name.addClass('townNameInput')
+  town_name.value('Generate your town...')
 
-  right_items = createElement("div")
-  right_items.addClass("side_items")
+  right_items = createElement('div')
+  right_items.addClass('side_items')
 
-  btn_save = createButton("💾")
+  btn_save = createButton('💾')
   btn_save.mouseClicked(saveToJson)
 
-  btn_load = createFileInput(loadFromJson)
-  label_load = createElement("label", "📂")
+  btn_load = createFileInput((file) => {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      loadFromJson(e.target.result)
+    }
+    reader.readAsText(file.file)
+  })
+  label_load = createElement('label', '📂')
   label_load.child(btn_load)
 
   right_items.child(btn_save)
@@ -228,6 +234,6 @@ function createUiElements() {
   header_container.child(town_name)
   header_container.child(right_items)
 
-  btn_draw_roads.attribute("disabled", "")
-  btn_generate_buildings.attribute("disabled", "")
+  btn_draw_roads.attribute('disabled', '')
+  btn_generate_buildings.attribute('disabled', '')
 }
