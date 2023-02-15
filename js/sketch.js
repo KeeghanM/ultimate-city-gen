@@ -215,15 +215,9 @@ function createUiElements() {
   right_items.addClass('side_items')
 
   btn_save = createButton('💾')
-  btn_save.mouseClicked(saveToJson)
+  btn_save.mouseClicked(saveToFile)
 
-  btn_load = createFileInput((file) => {
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      loadFromJson(e.target.result)
-    }
-    reader.readAsText(file.file)
-  })
+  btn_load = createFileInput(loadFromFile)
   label_load = createElement('label', '📂')
   label_load.child(btn_load)
 
