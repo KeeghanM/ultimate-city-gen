@@ -1,29 +1,34 @@
 const ROOF_COLORS = [
-  "#634902",
-  "#632805",
-  "#5e2c0e",
-  "#57321d",
-  "#4a220c",
-  "#451c1a",
-  "#8f342f",
-  "#695b3d",
+  '#634902',
+  '#632805',
+  '#5e2c0e',
+  '#57321d',
+  '#4a220c',
+  '#451c1a',
+  '#8f342f',
+  '#695b3d',
 ]
 
 class Building {
-  constructor(cell,options={}) {
+  constructor(options = {}) {
     this.id = options.id ? options.id : generateUniqueId()
-    if (cell) this.cells = [{ x: cell.x, y: cell.y }]
-    this.type = ""
-    this.points = []
-    this.corners = []
-    this.roof_lines = []
-    this.roof_points = []
-    this.color = ROOF_COLORS[Math.floor(Math.random() * ROOF_COLORS.length)]
-    this.inhabitants = []
+    this.cells = options.cells ? options.cells : []
+    this.type = options.type ? options.type : ''
+    this.points = options.points ? options.points : []
+    this.corners = options.corners ? options.corners : []
+    this.roof_lines = options.roof_lines ? options.roof_lines : []
+    this.roof_points = options.roof_points ? options.roof_points : []
+    this.color = options.color
+      ? options.color
+      : ROOF_COLORS[Math.floor(Math.random() * ROOF_COLORS.length)]
+    this.inhabitants = options.inhabitants ? options.inhabitants : []
+    this.business_name = options.business_name ? options.business_name : ""
+    this.titles = options.titles ? options.titles : []
+    this.types_list = options.types_list ? options.types_list : []
   }
 
   draw() {
-    fill(this == selected_building ? "#0096FF" : this.color)
+    fill(this == selected_building ? '#0096FF' : this.color)
 
     stroke(0)
     strokeWeight(0.5)

@@ -27,14 +27,10 @@ function loadFromJson(compressed_json) {
 
   // Need to reconstruct the building's and inhabitants as objects
   for (let loaded_building of loaded_town.buildings) {
-    console.log(loaded_building)
-    let new_building = new Building()
-    new_building.type = loaded_building.type
-    new_building.points = loaded_building.points
-    new_building.roof_lines = loaded_building.roof_lines
-    new_building.roof_points = loaded_building.roof_points
-    new_building.color = loaded_building.color
-    buildings.push(new_building)
+    buildings.push(new Building(loaded_building))
+  }
+  for (let loaded_person of loaded_town.city_inhabitants) {
+    city_inhabitants.push(new Person(loaded_person))
   }
 
   confirmCity()

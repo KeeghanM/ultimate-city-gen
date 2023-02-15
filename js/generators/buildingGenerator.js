@@ -45,7 +45,7 @@ function generateBuildings() {
         type = Math.random() * 100 < BUSINESS_RATIO ? "business" : "house"
       }
 
-      let building = new Building(cell)
+      let building = new Building({cells:[cell]})
       building.type = type
       // Some buildings want to be larger - there is a % chance to grow in each cardinal direction
       // Taverns almost alway grow
