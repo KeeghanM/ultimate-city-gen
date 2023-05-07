@@ -44,6 +44,7 @@ module.exports = function (grunt) {
           separator: ";",
         },
         src: [
+          "js/lib/lzcompress.js",
           "js/lib/globals.js",
           "js/components/building.js",
           "js/components/person.js",

@@ -21,8 +21,11 @@ class Pane {
   }
 
   moveToTop() {
-    panes.splice(panes.indexOf(this), 1)
-    panes.push(this)
+    let index = panes.indexOf(this)
+    if (index != -1) {
+      panes.push(panes.splice(index, 1)[0])
+    }
+
     for (let i = panes.length - 1; i >= 0; i--) {
       let pane = panes[i]
       pane.components_container.style("z-index", i * 10)
@@ -120,8 +123,7 @@ class Pane {
   }
 
   destroy() {
-    panes.splice(panes.indexOf(this), 1)
     this.components_container.remove()
-    panes.splice(panes.indexOf(this), 1) // I don't know why this needs calling twice - but it does!
+    panes.splice(panes.indexOf(this), 1)
   }
 }

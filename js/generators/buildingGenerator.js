@@ -10,6 +10,9 @@ function generateBuildings() {
   buildings = []
   building_check_x = min_road_x
   building_check_y = min_road_y
+  for (let cell of grid) {
+    if (cell.type == "building") cell.type = "dirt"
+  }
 
   while (building_check_x < grid_width && building_check_y < grid_height) {
     let cell = grid[indexFromXY(building_check_x, building_check_y)]
@@ -45,7 +48,7 @@ function generateBuildings() {
         type = Math.random() * 100 < BUSINESS_RATIO ? "business" : "house"
       }
 
-      let building = new Building(cell)
+      let building = new Building({ cells: [cell] })
       building.type = type
       // Some buildings want to be larger - there is a % chance to grow in each cardinal direction
       // Taverns almost alway grow
@@ -275,9 +278,9 @@ function generateBuildings() {
           ]
 
         building.business_name = business_name
-        building.inhabitants.push(first_employee)
+        building.inhabitants.push(first_employee.id)
 
-        first_employee.place_of_employment = building
+        first_employee.place_of_employment = building.id
         city_inhabitants.push(first_employee)
       }
 

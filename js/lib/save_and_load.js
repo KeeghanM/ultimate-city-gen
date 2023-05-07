@@ -1,34 +1,72 @@
-function saveToJson() {
-  let town = {
-    grid,
-    buildings,
-    name: town_name.value(),
-  }
+function saveToFile() {
+  let compressed = compressCity()
 
-  download(JSON.stringify(town), town_name.value() + ".json", "text/plain")
+  download(compressed, town_name.value() + ".ucg", "text/plain")
 }
 
-function loadFromJson(file) {
-  if (file.subtype !== "json") return
+function loadFromFile(file) {
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    decompressCity(e.target.result)
+  }
+  reader.readAsText(file.file)
+}
 
-  let loaded_town = file.data
-  if (!loaded_town.buildings || !loaded_town.grid || !loaded_town.name) return
+function saveToLocalStorage() {
+  try {
+    let compressed = compressCity()
+    localStorage.setItem(town_name.value(), compressed)
+    cuteAlert({
+      type: "success",
+      title: "Saved!",
+      message: "Your town has been saved successfully!",
+      buttonText: "Ok",
+    })
+  } catch (err) {
+    cuteAlert({
+      type: "error",
+      title: "Error",
+      message: "Something went wrong: " + err,
+      buttonText: "Oh..",
+    })
+  }
+}
+
+function loadFromLocalStorage(name) {
+  let compressed = localStorage.getItem(name)
+  decompressCity(compressed)
+}
+
+function compressCity() {
+  let town = JSON.stringify({
+    grid,
+    buildings,
+    city_inhabitants,
+    name: town_name.value(),
+  })
+
+  return LZString.compressToUTF16(town)
+}
+
+function decompressCity(compressed_json) {
+  let loaded_town = JSON.parse(LZString.decompressFromUTF16(compressed_json))
+
+  if (!loaded_town.buildings || !loaded_town.grid || !loaded_town.name) return //TODO: Error Handling
 
   grid = loaded_town.grid
   town_name.value(loaded_town.name)
   buildings = []
+  city_inhabitants = []
 
-  // Need to reconstruct the building objects to get access to their funcitons
+  // Need to reconstruct the building's and inhabitants as objects
   for (let loaded_building of loaded_town.buildings) {
-    let new_building = new Building()
-    new_building.type = loaded_building.type
-    new_building.points = loaded_building.points
-    new_building.roof_lines = loaded_building.roof_lines
-    new_building.roof_points = loaded_building.roof_points
-    new_building.color = loaded_building.color
-    buildings.push(new_building)
+    buildings.push(new Building(loaded_building))
+  }
+  for (let loaded_person of loaded_town.city_inhabitants) {
+    city_inhabitants.push(new Person(loaded_person))
   }
 
+  closeAllPanes()
   confirmCity()
   redraw()
 }

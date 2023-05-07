@@ -1,5 +1,6 @@
 class Person {
-  constructor(options) {
+  constructor(options={}) {
+    this.id = options.id ? options.id : generateUniqueId()
     let random_race = Math.random() * 100 //TODO: Base on city race split
     this.race = options.race
       ? options.race
@@ -56,14 +57,16 @@ class Person {
     if (baby_age > 20) {
       baby.findJob()
     }
-    baby.parents.push(this)
+    baby.parents.push(this.id)
 
     if (this.partner) {
       baby.parents.push(this.partner)
-      this.partner.children.push(baby)
+      let partner_index = indexFromId(city_inhabitants,this.partner) 
+      city_inhabitants[partner_index].children.push(baby.id)
     }
 
-    this.children.push(baby)
+    this.children.push(baby.id)
+    city_inhabitants.push(baby)
   }
 
   findJob() {
@@ -78,12 +81,30 @@ class Person {
       counter++
     }
     if (place_of_work) {
-      this.place_of_employment = place_of_work
+      this.place_of_employment = place_of_work.id
       this.job =
         place_of_work.titles[
           Math.floor(Math.random() * place_of_work.titles.length)
         ]
-      place_of_work.inhabitants.push(this)
+      place_of_work.inhabitants.push(this.id)
     }
+  }
+
+  formatDisplay() {
+    return (
+      this.first_name +
+      " " +
+      this.last_name +
+      " | " +
+      this.age +
+      "yr old " +
+      this.job +
+      " " +
+      this.race 
+    )
+  }
+
+  getName() {
+    return this.first_name + " " + this.last_name
   }
 }

@@ -87,23 +87,28 @@ function cleanGrid() {
 }
 
 function newCity() {
-  cuteAlert({
-    type: "question",
-    title: "Are you sure?",
-    message:
-      "Doing this will remove your entire city. Be sure to save before committing to this!",
-    confirmText: "Go!",
-    cancelText: "Cancel",
-  }).then((e) => {
-    if (e == "confirm") {
-      generateCity()
-    } else {
-      // nothing
-    }
-  })
+  if (grid.length == 0) {
+    // TODO: Suggest tutorial
+    generateCity()
+  } else {
+    cuteAlert({
+      type: "question",
+      title: "Are you sure?",
+      message:
+        "Doing this will remove your entire city. Be sure to save before committing to this!",
+      confirmText: "Go!",
+      cancelText: "Cancel",
+    }).then((e) => {
+      if (e == "confirm") {
+        generateCity()
+      }
+    })
+  }
 }
 
 function generateCity() {
+  closeAllPanes()
+
   btn_draw_roads.removeAttribute("disabled", "")
   btn_generate_city.removeClass("click_me")
   btn_generate_buildings.removeAttribute("disabled", "")
@@ -113,12 +118,15 @@ function generateCity() {
   btn_generate_buildings.removeAttribute("hidden", "")
   btn_confirm_city.removeAttribute("hidden", "")
   btn_open_city_details.attribute("hidden", "")
+  btn_open_building_list.attribute("hidden", "")
+  btn_open_people_list.attribute("hidden", "")
 
   town_name.value(GenerateTownName())
   grid_width = size_slider.value()
   grid_height = grid_width
   min_road_x = grid_width
   min_road_y = grid_height
+  city_inhabitants = []
 
   generateRoads()
 }
@@ -177,7 +185,7 @@ function createUiElements() {
   btn_open_city_details = createButton("📜")
   btn_open_city_details.mouseClicked(() => {
     btn_open_city_details.removeClass("click_me")
-    if (!closeExistingPanes("city_details")) {
+    if (!closePanesOfType("city_details")) {
       openCityDetail()
     }
   })
@@ -185,7 +193,7 @@ function createUiElements() {
 
   btn_open_building_list = createButton("🏠")
   btn_open_building_list.mouseClicked(() => {
-    if (!closeExistingPanes("building_list")) {
+    if (!closePanesOfType("building_list")) {
       openBuildingList()
     }
   })
@@ -193,7 +201,7 @@ function createUiElements() {
 
   btn_open_people_list = createButton("🧍")
   btn_open_people_list.mouseClicked(() => {
-    if (!closeExistingPanes("people_list")) {
+    if (!closePanesOfType("people_list")) {
       openPeopleList()
     }
   })
@@ -215,9 +223,9 @@ function createUiElements() {
   right_items.addClass("side_items")
 
   btn_save = createButton("💾")
-  btn_save.mouseClicked(saveToJson)
+  btn_save.mouseClicked(saveToFile)
 
-  btn_load = createFileInput(loadFromJson)
+  btn_load = createFileInput(loadFromFile)
   label_load = createElement("label", "📂")
   label_load.child(btn_load)
 
