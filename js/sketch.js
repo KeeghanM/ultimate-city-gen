@@ -87,20 +87,23 @@ function cleanGrid() {
 }
 
 function newCity() {
-  cuteAlert({
-    type: "question",
-    title: "Are you sure?",
-    message:
-      "Doing this will remove your entire city. Be sure to save before committing to this!",
-    confirmText: "Go!",
-    cancelText: "Cancel",
-  }).then((e) => {
-    if (e == "confirm") {
-      generateCity()
-    } else {
-      // nothing
-    }
-  })
+  if (grid.length == 0) {
+    // TODO: Suggest tutorial
+    generateCity()
+  } else {
+    cuteAlert({
+      type: "question",
+      title: "Are you sure?",
+      message:
+        "Doing this will remove your entire city. Be sure to save before committing to this!",
+      confirmText: "Go!",
+      cancelText: "Cancel",
+    }).then((e) => {
+      if (e == "confirm") {
+        generateCity()
+      }
+    })
+  }
 }
 
 function generateCity() {
