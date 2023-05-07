@@ -1,11 +1,7 @@
 function saveToFile() {
   let compressed = compressCity()
 
-  download(
-    compressed,
-    town_name.value() + '.ucg',
-    'text/plain'
-  )
+  download(compressed, town_name.value() + ".ucg", "text/plain")
 }
 
 function loadFromFile(file) {
@@ -17,21 +13,21 @@ function loadFromFile(file) {
 }
 
 function saveToLocalStorage() {
-  try { 
+  try {
     let compressed = compressCity()
-    localStorage.setItem(town_name.value(),compressed)
+    localStorage.setItem(town_name.value(), compressed)
     cuteAlert({
       type: "success",
       title: "Saved!",
       message: "Your town has been saved successfully!",
-      buttonText: "Ok"
+      buttonText: "Ok",
     })
-  } catch(err) {
+  } catch (err) {
     cuteAlert({
       type: "error",
       title: "Error",
       message: "Something went wrong: " + err,
-      buttonText: "Oh.."
+      buttonText: "Oh..",
     })
   }
 }
@@ -70,6 +66,7 @@ function decompressCity(compressed_json) {
     city_inhabitants.push(new Person(loaded_person))
   }
 
+  closeAllPanes()
   confirmCity()
   redraw()
 }

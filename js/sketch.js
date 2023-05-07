@@ -104,6 +104,8 @@ function newCity() {
 }
 
 function generateCity() {
+  closeAllPanes()
+
   btn_draw_roads.removeAttribute("disabled", "")
   btn_generate_city.removeClass("click_me")
   btn_generate_buildings.removeAttribute("disabled", "")
@@ -180,7 +182,7 @@ function createUiElements() {
   btn_open_city_details = createButton("📜")
   btn_open_city_details.mouseClicked(() => {
     btn_open_city_details.removeClass("click_me")
-    if (!closeExistingPanes("city_details")) {
+    if (!closePanesOfType("city_details")) {
       openCityDetail()
     }
   })
@@ -188,7 +190,7 @@ function createUiElements() {
 
   btn_open_building_list = createButton("🏠")
   btn_open_building_list.mouseClicked(() => {
-    if (!closeExistingPanes("building_list")) {
+    if (!closePanesOfType("building_list")) {
       openBuildingList()
     }
   })
@@ -196,7 +198,7 @@ function createUiElements() {
 
   btn_open_people_list = createButton("🧍")
   btn_open_people_list.mouseClicked(() => {
-    if (!closeExistingPanes("people_list")) {
+    if (!closePanesOfType("people_list")) {
       openPeopleList()
     }
   })

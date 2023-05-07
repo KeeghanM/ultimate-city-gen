@@ -1,4 +1,4 @@
-function closeExistingPanes(pane_type) {
+function closePanesOfType(pane_type) {
   let was_open = false
   for (let pane of panes) {
     if (pane.type == pane_type) {
@@ -7,6 +7,14 @@ function closeExistingPanes(pane_type) {
     }
   }
   return was_open
+}
+
+function closeAllPanes() {
+  panes = []
+  let allPanes = document.querySelectorAll(".pane_container")
+  for (let pane of allPanes) {
+    pane.remove()
+  }
 }
 
 function openCityDetail() {
